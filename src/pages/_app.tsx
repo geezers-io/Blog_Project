@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
-import PageHeader from '@/components/layout/PageHeader';
-import PageSidebar from '@/components/layout/PageSidebar';
+import PageLayout from '@/components/layout/PageLayout';
 import { theme } from '@/styles/theme/color';
 import ErrorBoundary from 'components/ErrorBoundary';
 export const metadata = {
@@ -11,10 +10,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
-        <PageHeader />
-        <PageSidebar>
+        <PageLayout>
           <Component {...pageProps} />
-        </PageSidebar>
+        </PageLayout>
       </ThemeProvider>
     </ErrorBoundary>
   );
