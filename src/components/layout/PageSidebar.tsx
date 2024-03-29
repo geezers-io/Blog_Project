@@ -1,16 +1,13 @@
-import { FC, ReactNode } from 'react';
 import * as S from '@/styles/layout/layout.style';
 
-interface Props {
-  children: ReactNode;
-}
-
-const PageSidebar: FC<Props> = ({ children }) => {
+const PageSidebar = () => {
   return (
-    <S.BGContainer>
-      <S.BGSidebarContainer>ss</S.BGSidebarContainer>
-      <S.BGContentsContainer>{children}</S.BGContentsContainer>
-    </S.BGContainer>
+    <S.BGSidebarContainer>
+      <S.ProfileContainer>
+        <div style={{ width: '150px', backgroundColor: 'yellow', margin: ' 20px auto', height: '200px' }}>picture</div>
+        <S.ProfileDetailContainer>descriptions</S.ProfileDetailContainer>
+      </S.ProfileContainer>
+    </S.BGSidebarContainer>
   );
 };
 

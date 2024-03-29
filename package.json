@@ -11,6 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint 'src/**/*.{ts,tsx}' --fix",
     "typecheck": "tsc --noEmit",
     "lint-staged": "lint-staged"
   },
