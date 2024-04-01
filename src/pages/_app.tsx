@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app';
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from 'next-themes';
 import PageLayout from '@/components/layout/PageLayout';
-import { theme } from '@/styles/theme/color';
 import ErrorBoundary from 'components/ErrorBoundary';
 export const metadata = {
   title: 'Blog-Project ',
@@ -9,7 +8,7 @@ export const metadata = {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider themes={['light', 'dark']}>
         <PageLayout>
           <Component {...pageProps} />
         </PageLayout>
