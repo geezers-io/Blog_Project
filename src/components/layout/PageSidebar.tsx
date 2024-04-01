@@ -1,11 +1,42 @@
+import Image from 'next/image';
+import { CiMail } from 'react-icons/ci';
+import { IoIosCall } from 'react-icons/io';
+import { TiWorld } from 'react-icons/ti';
 import * as S from '@/styles/layout/layout.style';
 
 const PageSidebar = () => {
   return (
     <S.BGSidebarContainer>
       <S.ProfileContainer>
-        <div style={{ width: '150px', backgroundColor: 'yellow', margin: ' 20px auto', height: '200px' }}>picture</div>
-        <S.ProfileDetailContainer>descriptions</S.ProfileDetailContainer>
+        <S.ImageContainer>
+          <Image src="/Profile.jpg" alt="프로필 사진" width="500px" height="500px" objectFit="contain" />
+        </S.ImageContainer>
+
+        <S.ProfileDetailContainer>
+          <S.ProfileName>Heedyomy</S.ProfileName>
+          <S.DesriptionName>학생</S.DesriptionName> <br />
+          <S.DesriptionName>
+            내 소개를 할게 나는 히정이야 내 별명은 히됴미고 나는 ... 음... 노래 듣는 걸 좋아해 ... 😀
+          </S.DesriptionName>
+          <S.IconContainer>
+            <S.IconStyle>
+              <CiMail className="icon" />
+            </S.IconStyle>
+            <p>info@yourdomain.com</p>
+          </S.IconContainer>
+          <S.IconContainer>
+            <S.IconStyle>
+              <IoIosCall className="icon" />
+            </S.IconStyle>
+            <p>+1 (378) 400-1234</p>
+          </S.IconContainer>
+          <S.IconContainer>
+            <S.IconStyle>
+              <TiWorld className="icon" />
+            </S.IconStyle>
+            <p>www.yourdomain.com</p>
+          </S.IconContainer>
+        </S.ProfileDetailContainer>
       </S.ProfileContainer>
     </S.BGSidebarContainer>
   );

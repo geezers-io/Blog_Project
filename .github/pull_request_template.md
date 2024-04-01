@@ -1,6 +1,10 @@
 ## Type
 - [ ] Feature
 - [ ] Fix
+- [ ] Design
+- [ ] Remove
+- [ ] Rename
+- [ ] Test
 
 <!-- github 이슈번호  -->
 Implements [issue #1](https://github.com/geezers-io/Blog_Project/issues/1)
