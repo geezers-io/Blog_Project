@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { CiMail } from 'react-icons/ci';
 import { IoIosCall } from 'react-icons/io';
 import { TiWorld } from 'react-icons/ti';
+import * as C from '@/styles/common/common.style';
 import * as S from '@/styles/layout/layout.style';
 
 const PageSidebar = () => {
@@ -13,11 +14,11 @@ const PageSidebar = () => {
         </S.ImageContainer>
 
         <S.ProfileDetailContainer>
-          <S.ProfileName>Heedyomy</S.ProfileName>
-          <S.DesriptionName>학생</S.DesriptionName> <br />
-          <S.DesriptionName>
+          <C.CommonText size="20px">Heedyomy</C.CommonText>
+          <S.DescriptionName>학생</S.DescriptionName> <br />
+          <S.DescriptionName>
             내 소개를 할게 나는 히정이야 내 별명은 히됴미고 나는 ... 음... 노래 듣는 걸 좋아해 ... 😀
-          </S.DesriptionName>
+          </S.DescriptionName>
           <S.IconContainer>
             <S.IconStyle>
               <CiMail className="icon" />

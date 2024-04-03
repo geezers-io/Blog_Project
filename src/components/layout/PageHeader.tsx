@@ -1,16 +1,18 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { DarkMode, LightMode, Search } from '@mui/icons-material';
 import { Button, Grid, TextField } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import MusicPlayer from '@/components/MusicPlayler';
+import { ColorModeContext } from '@/pages/_index';
 import * as S from '@/styles/layout/layout.style';
 
 const PageHeader = () => {
   const [searchVisible, setSearchVisible] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  const sunIcon = theme === 'dark' ? <LightMode /> : <DarkMode />;
+  const theme = useTheme();
+  const colorMode = useContext(ColorModeContext);
+  console.log(theme);
 
   return (
     <S.BGHeaderContainer>
@@ -23,7 +25,7 @@ const PageHeader = () => {
             style={{ paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}
           >
             <Grid item>
-              <img src="/logo.png" style={{ width: 100, height: 50 }} />
+              <Image src="/logo.png" alt="logo" width={100} height={50} />
             </Grid>
             <Grid item>
               <MusicPlayer />
@@ -49,8 +51,8 @@ const PageHeader = () => {
               <Button onClick={() => setSearchVisible(!searchVisible)}>
                 <Search style={{ color: 'black' }} />
               </Button>
-              <Button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} style={{ color: 'black' }}>
-                {sunIcon}
+              <Button onClick={colorMode.toggleColorMode} style={{ color: 'black' }}>
+                {theme.palette.mode === 'dark' ? <DarkMode /> : <LightMode />}
               </Button>
             </Grid>
           </Grid>
