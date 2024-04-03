@@ -7,7 +7,7 @@ interface Props {
 }
 export const ColorModeContext = createContext({
   toggleColorMode: () => {
-    'light';
+    return;
   },
 });
 export const Provider: FC<Props> = ({ children }) => {
