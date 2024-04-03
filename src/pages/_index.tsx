@@ -5,12 +5,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 interface Props {
   children: ReactNode;
 }
-export const ColorModeContext = createContext({
-  toggleColorMode: () => {
-    return;
-  },
-});
-const Provider: FC<Props> = ({ children }) => {
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+export const Provider: FC<Props> = ({ children }) => {
   const [mode, setMode] = useState<PaletteMode>('light');
   const colorMode = useMemo(
     () => ({
@@ -76,5 +72,3 @@ const Provider: FC<Props> = ({ children }) => {
     </ColorModeContext.Provider>
   );
 };
-
-export default Provider;
