@@ -19,7 +19,6 @@ module.exports = {
     },
   },
   rules: {
-    'arrow-body-style': ['warn', 'as-needed'],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     '@typescript-eslint/ban-ts-comment': 2,
     '@typescript-eslint/camelcase': 0,
