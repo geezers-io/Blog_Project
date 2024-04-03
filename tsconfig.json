@@ -14,7 +14,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "jsx": "preserve",
-    "types": ["@emotion/react/types/css-prop"],
+    "types": ["@emotion/react/types/css-prop", "module"],
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
