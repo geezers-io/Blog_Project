@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import * as React from 'react';
 import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
@@ -60,7 +61,7 @@ export default function MusicPlayerSlider() {
       <Widget>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <CoverImage>
-            <img src="https://image.bugsm.co.kr/album/images/500/204000/20400083.jpg" />
+            <Image src="/music.jpg" width={300} height={300} alt="music image" />
           </CoverImage>
           <Box sx={{ ml: 1.5, minWidth: 0 }}>
             <Typography variant="caption" color="text.secondary" fontWeight={500}>
