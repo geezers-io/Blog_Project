@@ -6,7 +6,9 @@ interface Props {
   children: ReactNode;
 }
 export const ColorModeContext = createContext({
-  toggleColorMode: () => {},
+  toggleColorMode: () => {
+    'light';
+  },
 });
 export const Provider: FC<Props> = ({ children }) => {
   const [mode, setMode] = useState<PaletteMode>('light');
