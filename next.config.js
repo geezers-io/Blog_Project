@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
-  ignoreDuringBuilds: true,
-};
+const nextConfig = {};
 
 module.exports = nextConfig;
