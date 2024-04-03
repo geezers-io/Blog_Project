@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+
+const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizeImages: true,
     optimizeFonts: true,
   },
 };
+
+module.exports = nextConfig;
