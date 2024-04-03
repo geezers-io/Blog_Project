@@ -46,13 +46,7 @@ export const ProfileDetailContainer = styled.div`
   padding: 5px 10px;
 `;
 
-export const ProfileName = styled.p`
-  font-size: 25px;
-  color: #4d5053;
-  margin: 0;
-`;
-
-export const DesriptionName = styled.p`
+export const DescriptionName = styled.p`
   font-size: 15px;
   color: #4d5053;
   margin: 10px 0;

@@ -1,10 +1,10 @@
 {
-  "name": "Blog-Project",
+  "name": "BlogProject",
   "version": "0.0.1",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "https://github.com/geezers-io/Blog-Project.git"
+    "url": "https://github.com/geezers-io/Blog_Project.git"
   },
   "scripts": {
     "prepare": "husky install",
@@ -29,7 +29,6 @@
     "@mui/icons-material": "^5.15.14",
     "@react-icons/all-files": "^4.1.0",
     "babel-plugin-styled-components": "^2.1.4",
-    "bootstrap-icons": "^1.11.3",
     "next": "^12.3.4",
     "next-themes": "^0.3.0",
     "react": "^18.2.0",
