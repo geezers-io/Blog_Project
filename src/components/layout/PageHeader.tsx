@@ -1,18 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext, useState } from 'react';
-import { DarkMode, LightMode, Search } from '@mui/icons-material';
-import { Button, Grid, TextField } from '@mui/material';
+import { useContext } from 'react';
+import { DarkMode, LightMode } from '@mui/icons-material';
+import { ToggleButton, ToggleButtonGroup, Grid, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import MusicPlayer from '@/components/MusicPlayler';
 import { ColorModeContext } from '@/pages/_index';
 import * as S from '@/styles/layout/layout.style';
 
 const PageHeader = () => {
-  const [searchVisible, setSearchVisible] = useState(false);
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
-  console.log(theme);
+
+  const handleModeToggle = () => {
+    colorMode.toggleColorMode();
+  };
 
   return (
     <S.BGHeaderContainer>
@@ -21,42 +22,42 @@ const PageHeader = () => {
           <Grid container style={{ paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}>
             <Grid container>
               <Grid item>
-                <Image src="/logo.png" alt="logo" width={100} height={50} />
+                <Link href="/" passHref>
+                  <a>
+                    <Image src="/logo.png" alt="logo" width={100} height={50} />
+                  </a>
+                </Link>
               </Grid>
 
-              <Grid item marginLeft="36%">
-                <Grid container justifyContent="center">
+              <Grid item xs justifyContent="flex-end">
+                <Grid container justifyContent="flex-end">
                   <Button style={{ color: 'black' }}>
-                    <Link href="/">
-                      <a style={{ textDecoration: 'none', color: 'black' }}>홈</a>
+                    <Link href="/about">
+                      <a style={{ textDecoration: 'none', color: 'black' }}>프로필 정보</a>
                     </Link>
                   </Button>
                   <Button style={{ color: 'black' }}>
-                    <Link href="/about" passHref>
-                      <a style={{ textDecoration: 'none', color: 'black' }}>내 소개</a>
+                    <Link href="/signin" passHref>
+                      <a style={{ textDecoration: 'none', color: 'black' }}>로그인</a>
                     </Link>
                   </Button>
                   <Button style={{ color: 'black' }}>
                     <Link href="/guestbook" passHref>
-                      <a style={{ textDecoration: 'none', color: 'black' }}>방명록</a>
+                      <a style={{ textDecoration: 'none', color: 'black' }}>글쓰기</a>
                     </Link>
-                  </Button>
-                  <Button onClick={() => setSearchVisible(!searchVisible)}>
-                    <Search style={{ color: 'black' }} />
                   </Button>
                 </Grid>
               </Grid>
-              {searchVisible && <TextField id="outlined-basic" label="검색" variant="outlined" />}
             </Grid>
-
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <MusicPlayer />
-              </Grid>
-            </Grid>
-            <Button onClick={colorMode.toggleColorMode} style={{ color: 'black' }}>
-              {theme.palette.mode === 'dark' ? <DarkMode /> : <LightMode />}
-            </Button>
+            <ToggleButtonGroup
+              value={theme.palette.mode}
+              exclusive
+              onChange={handleModeToggle}
+              aria-label="text alignment"
+              style={{ color: 'black', marginTop: '14%' }}
+            >
+              <ToggleButton value="dark">{theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}</ToggleButton>
+            </ToggleButtonGroup>
           </Grid>
         </Grid>
       </Grid>
