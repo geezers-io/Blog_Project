@@ -10,7 +10,7 @@ export const ColorModeContext = createContext({
     return;
   },
 });
-export const Provider: FC<Props> = ({ children }) => {
+const Provider: FC<Props> = ({ children }) => {
   const [mode, setMode] = useState<PaletteMode>('light');
   const colorMode = useMemo(
     () => ({
@@ -76,3 +76,5 @@ export const Provider: FC<Props> = ({ children }) => {
     </ColorModeContext.Provider>
   );
 };
+
+export default Provider;
