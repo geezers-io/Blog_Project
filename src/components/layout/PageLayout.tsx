@@ -7,16 +7,14 @@ interface Props {
   children: ReactNode;
 }
 
-const PageLayout: FC<Props> = ({ children }) => {
-  return (
-    <>
-      <PageHeader />
-      <S.BGContainer>
-        <PageSidebar />
-        <S.BGContentsContainer>{children}</S.BGContentsContainer>
-      </S.BGContainer>
-    </>
-  );
-};
+const PageLayout: FC<Props> = ({ children }) => (
+  <>
+    <PageHeader />
+    <S.BGContainer>
+      <PageSidebar />
+      <S.BGContentsContainer>{children}</S.BGContentsContainer>
+    </S.BGContainer>
+  </>
+);
 
 export default PageLayout;

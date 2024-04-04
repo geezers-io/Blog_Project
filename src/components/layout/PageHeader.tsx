@@ -11,9 +11,12 @@ const PageHeader = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
 
+
   const handleModeToggle = () => {
     colorMode.toggleColorMode();
   };
+
+
 
   return (
     <S.BGHeaderContainer>
