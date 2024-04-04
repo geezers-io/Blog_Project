@@ -32,12 +32,12 @@ const PageHeader = () => {
                     </Link>
                   </Button>
                   <Button style={{ color: 'black' }}>
-                    <Link href="/about">
+                    <Link href="/about" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>내 소개</a>
                     </Link>
                   </Button>
                   <Button style={{ color: 'black' }}>
-                    <Link href="/guestbook">
+                    <Link href="/guestbook" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>방명록</a>
                     </Link>
                   </Button>
