@@ -12,7 +12,6 @@ const PageHeader = () => {
   const [searchVisible, setSearchVisible] = useState(false);
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
-  console.log(theme);
 
   return (
     <S.BGHeaderContainer>
