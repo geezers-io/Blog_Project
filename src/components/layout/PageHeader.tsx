@@ -31,18 +31,24 @@ const PageHeader = () => {
 
               <Grid item xs justifyContent="flex-end">
                 <Grid container justifyContent="flex-end">
-                  <Button style={{ color: 'black' }}>
+                  <Button style={{ color: 'black', marginRight: '10px' }}>
                     <Link href="/about">
                       <a style={{ textDecoration: 'none', color: 'black' }}>프로필 정보</a>
                     </Link>
                   </Button>
-                  <Button style={{ color: 'black' }}>
+                  <Button style={{ color: 'black', marginRight: '10px' }}>
                     <Link href="/signin" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>로그인</a>
                     </Link>
                   </Button>
                   <Button
-                    style={{ color: 'black', borderRadius: '20px', backgroundColor: '#ffcc80', padding: '10px 20px' }}
+                    style={{
+                      color: 'black',
+                      borderRadius: '20px',
+                      backgroundColor: '#ffcc80',
+                      padding: '10px 20px',
+                      marginRight: '10px',
+                    }}
                   >
                     <Link href="/guestbook" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>글쓰기</a>
