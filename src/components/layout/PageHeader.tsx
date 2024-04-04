@@ -41,7 +41,9 @@ const PageHeader = () => {
                       <a style={{ textDecoration: 'none', color: 'black' }}>로그인</a>
                     </Link>
                   </Button>
-                  <Button style={{ color: 'black' }}>
+                  <Button
+                    style={{ color: 'black', borderRadius: '20px', backgroundColor: '#ffcc80', padding: '10px 20px' }}
+                  >
                     <Link href="/guestbook" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>글쓰기</a>
                     </Link>
