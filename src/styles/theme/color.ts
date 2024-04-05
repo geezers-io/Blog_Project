@@ -11,20 +11,3 @@ export const color = {
     main: '#DA1E28',
   },
 };
-
-export const themeStyle = {
-  MuiButton: {
-    variants: [
-      {
-        props: { variant: 'contained' },
-        style: {
-          color: 'black',
-          borderRadius: '20px',
-          backgroundColor: '#ffcc80',
-          padding: '10px 20px',
-          marginRight: '10px',
-        },
-      },
-    ],
-  },
-};
