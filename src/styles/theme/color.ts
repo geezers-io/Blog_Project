@@ -1,4 +1,4 @@
-const color = {
+export const color = {
   primary: {
     light: '#ffc107',
     main: '#ffa000',
@@ -12,4 +12,19 @@ const color = {
   },
 };
 
-export default color;
+export const themeStyle = {
+  MuiButton: {
+    variants: [
+      {
+        props: { variant: 'contained' },
+        style: {
+          color: 'black',
+          borderRadius: '20px',
+          backgroundColor: '#ffcc80',
+          padding: '10px 20px',
+          marginRight: '10px',
+        },
+      },
+    ],
+  },
+};
