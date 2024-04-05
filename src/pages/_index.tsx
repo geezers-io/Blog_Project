@@ -20,6 +20,22 @@ export const Provider: FC<Props> = ({ children }) => {
   const theme = useMemo(
     () =>
       createTheme({
+        components: {
+          MuiButton: {
+            variants: [
+              {
+                props: { variant: 'contained' },
+                style: {
+                  color: 'black',
+                  borderRadius: '20px',
+                  backgroundColor: '#ffcc80',
+                  padding: '10px 20px',
+                  marginRight: '10px',
+                },
+              },
+            ],
+          },
+        },
         palette: {
           mode,
           primary: {
@@ -33,35 +49,6 @@ export const Provider: FC<Props> = ({ children }) => {
           error: {
             main: '#DA1E28',
           },
-          // ...(mode === 'dark' && {
-          //   background: {
-          //     default: '#4D5053',
-          //     paper: '#0000',
-          //   },
-          // }),
-          // ...(mode === 'light' && {
-          //   background: {
-          //     default: '#0000',
-          //     paper: '#4D5053',
-          //   },
-          // }),
-          // ...(mode === 'dark' && {
-          //   background: {
-          //     default: deepOrange[900],
-          //     paper: deepOrange[900],
-          //   },
-          // }),
-          // text: {
-          //   ...(mode === 'light'
-          //     ? {
-          //         primary: grey[900],
-          //         secondary: grey[800],
-          //       }
-          //     : {
-          //         primary: '#fff',
-          //         secondary: grey[500],
-          //       }),
-          // },
         },
       }),
     [mode],
