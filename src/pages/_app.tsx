@@ -1,16 +1,17 @@
 import type { AppProps } from 'next/app';
+import { ThemeProvider } from '@mui/material/styles';
 import PageLayout from '@/components/layout/PageLayout';
+import theme from '@/styles/theme';
 import ErrorBoundary from 'components/ErrorBoundary';
-import { Provider } from './_index';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>
-      <Provider>
+      <ThemeProvider theme={theme}>
         <PageLayout>
           <Component {...pageProps} />
         </PageLayout>
-      </Provider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

@@ -1,20 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext } from 'react';
-import { DarkMode, LightMode } from '@mui/icons-material';
-import { ToggleButton, ToggleButtonGroup, Grid, Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { ColorModeContext } from '@/pages/_index';
+import { Grid, Button } from '@mui/material';
 import * as S from '@/styles/layout/layout.style';
 
 const PageHeader = () => {
-  const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
-
-  const handleModeToggle = () => {
-    colorMode.toggleColorMode();
-  };
-
   return (
     <S.BGHeaderContainer>
       <Grid container>
@@ -41,15 +30,7 @@ const PageHeader = () => {
                       <a style={{ textDecoration: 'none', color: 'black' }}>로그인</a>
                     </Link>
                   </Button>
-                  <Button
-                    style={{
-                      color: 'black',
-                      borderRadius: '20px',
-                      backgroundColor: '#ffcc80',
-                      padding: '10px 20px',
-                      marginRight: '10px',
-                    }}
-                  >
+                  <Button variant="contained">
                     <Link href="/guestbook" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>글쓰기</a>
                     </Link>
@@ -57,15 +38,6 @@ const PageHeader = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <ToggleButtonGroup
-              value={theme.palette.mode}
-              exclusive
-              onChange={handleModeToggle}
-              aria-label="text alignment"
-              style={{ color: 'black', marginTop: '14%' }}
-            >
-              <ToggleButton value="dark">{theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}</ToggleButton>
-            </ToggleButtonGroup>
           </Grid>
         </Grid>
       </Grid>
