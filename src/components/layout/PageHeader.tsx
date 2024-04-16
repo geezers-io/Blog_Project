@@ -31,7 +31,7 @@ const PageHeader = () => {
                     </Link>
                   </Button>
                   <Button variant="contained">
-                    <Link href="/guestbook" passHref>
+                    <Link href="/uploadpost" passHref>
                       <a style={{ textDecoration: 'none', color: 'black' }}>글쓰기</a>
                     </Link>
                   </Button>
