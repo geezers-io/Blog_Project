@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Grid, Button } from '@mui/material';
 import * as S from '@/styles/layout/layout.style';
+import LoginComponent from './Login';
 
 const PageHeader = () => {
   return (
@@ -35,6 +36,7 @@ const PageHeader = () => {
                       <a style={{ textDecoration: 'none', color: 'black' }}>글쓰기</a>
                     </Link>
                   </Button>
+                  <LoginComponent />
                 </Grid>
               </Grid>
             </Grid>
