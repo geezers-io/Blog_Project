@@ -23,12 +23,7 @@ const PageHeader = () => {
                 <Grid container justifyContent="flex-end">
                   <Button style={{ color: 'black', marginRight: '10px' }}>
                     <Link href="/about">
-                      <a style={{ textDecoration: 'none', color: 'black' }}>프로필 정보 dd</a>
-                    </Link>
-                  </Button>
-                  <Button style={{ color: 'black', marginRight: '10px' }}>
-                    <Link href="/signin" passHref>
-                      <a style={{ textDecoration: 'none', color: 'black' }}>로그인</a>
+                      <a style={{ textDecoration: 'none', color: 'black' }}>프로필 정보 </a>
                     </Link>
                   </Button>
                   <Button variant="contained">
