@@ -22,8 +22,8 @@
 
 |                   Frontend                   |                     Frontend                     |
 | :------------------------------------------: | :----------------------------------------------: |
-| ![](https://github.com/Ellsy23.png?size=120) | ![](https://github.com/heejung0413.png?size=120) |
-|     [이준현](https://github.com/Ellsy23)     |     [임희정](https://github.com/heejung0413)     |
+| ![](https://github.com/Ash8382.png?size=120) | ![](https://github.com/heejung0413.png?size=120) |
+|     [이준현](https://github.com/Ash8382)     |     [임희정](https://github.com/heejung0413)     |
 
 </div>
 
