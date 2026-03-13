@@ -8,18 +8,18 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ['Pretendard', '-apple-system', '"Apple SD Gothic Neo"', '"Segoe UI"', 'sans-serif'].join(','),
-    h1: { fontWeight: 700, fontSize: '2.25rem', lineHeight: 1.3 },
-    h2: { fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.3 },
-    h3: { fontWeight: 600, fontSize: '1.5rem', lineHeight: 1.4 },
-    h4: { fontWeight: 600, fontSize: '1.25rem', lineHeight: 1.4 },
-    h5: { fontWeight: 600, fontSize: '1.125rem', lineHeight: 1.5 },
-    h6: { fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 },
-    body1: { fontSize: '1rem', lineHeight: 1.7 },
-    body2: { fontSize: '0.875rem', lineHeight: 1.6 },
+    h1: { fontWeight: 800, fontSize: '2.5rem', lineHeight: 1.2, letterSpacing: '-0.02em' },
+    h2: { fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.3, letterSpacing: '-0.01em' },
+    h3: { fontWeight: 700, fontSize: '1.375rem', lineHeight: 1.4 },
+    h4: { fontWeight: 600, fontSize: '1.125rem', lineHeight: 1.4 },
+    h5: { fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 },
+    h6: { fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.5 },
+    body1: { fontSize: '1rem', lineHeight: 1.8, color: color.text.primary },
+    body2: { fontSize: '0.875rem', lineHeight: 1.6, color: color.text.secondary },
     caption: { fontSize: '0.75rem', color: color.text.secondary },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 4,
   },
   components: {
     MuiButton: {
@@ -29,10 +29,11 @@ const theme = createTheme({
           fontWeight: 600,
           borderRadius: 8,
           padding: '8px 20px',
+          fontSize: '0.875rem',
         },
         contained: {
           backgroundColor: color.primary.main,
-          color: color.primary.contrastText,
+          color: '#fff',
           boxShadow: 'none',
           '&:hover': {
             backgroundColor: color.primary.dark,
@@ -40,7 +41,7 @@ const theme = createTheme({
           },
         },
         outlined: {
-          borderColor: '#e5e7eb',
+          borderColor: '#dee2e6',
           color: color.text.primary,
           '&:hover': {
             borderColor: color.primary.main,
@@ -52,12 +53,13 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-          border: '1px solid #f0f0f0',
-          transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+          boxShadow: 'none',
+          border: 'none',
+          borderRadius: 4,
+          transition: 'transform 0.12s ease, box-shadow 0.12s ease',
           '&:hover': {
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            transform: 'translateY(-2px)',
+            transform: 'translateY(-4px)',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.08)',
           },
         },
       },
@@ -66,7 +68,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 500,
-          borderRadius: 6,
+          borderRadius: 12,
+          fontSize: '0.8125rem',
         },
       },
     },
@@ -82,7 +85,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#fafafa',
+          backgroundColor: '#f8f9fa',
           margin: 0,
           padding: 0,
         },

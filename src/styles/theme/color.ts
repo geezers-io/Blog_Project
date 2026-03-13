@@ -3,7 +3,7 @@ export const color = {
     light: '#ffca28',
     main: '#ffa000',
     dark: '#ff8f00',
-    contrastText: '#1a1a1a',
+    contrastText: '#ffffff',
   },
   secondary: {
     light: '#4a4a4a',
@@ -15,11 +15,11 @@ export const color = {
     main: '#ef4444',
   },
   background: {
-    default: '#fafafa',
+    default: '#f8f9fa',
     paper: '#ffffff',
   },
   text: {
-    primary: '#1a1a1a',
-    secondary: '#6b7280',
+    primary: '#212529',
+    secondary: '#868e96',
   },
 };

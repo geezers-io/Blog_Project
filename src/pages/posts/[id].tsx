@@ -1,9 +1,10 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { Favorite, FavoriteBorder, ChatBubbleOutline } from '@mui/icons-material';
-import { Typography, Box, Button, TextField, CardMedia, Avatar, Chip, Divider, Paper } from '@mui/material';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Typography, Box, Button, TextField, CardMedia, Avatar, Divider } from '@mui/material';
 import { api } from '@/lib/api';
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -63,32 +64,40 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
   };
 
   return (
-    <Box sx={{ maxWidth: 720, mx: 'auto' }}>
-      {/* Header */}
-      {post.category && (
-        <Chip
-          label={post.category.name}
-          size="small"
-          sx={{
-            mb: 2,
-            backgroundColor: 'rgba(255,160,0,0.1)',
-            color: '#e65100',
-            fontWeight: 500,
-          }}
-        />
-      )}
-
-      <Typography variant="h1" sx={{ mb: 2 }}>
+    <Box sx={{ maxWidth: 768, mx: 'auto' }}>
+      {/* Title */}
+      <Typography
+        sx={{
+          fontWeight: 800,
+          fontSize: { xs: '2rem', md: '2.75rem' },
+          lineHeight: 1.2,
+          letterSpacing: '-0.02em',
+          color: '#212529',
+          mb: 3,
+          mt: 2,
+        }}
+      >
         {post.title}
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
-        <Avatar src={post.author.image} alt={post.author.name} sx={{ width: 36, height: 36 }} />
-        <Box>
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {post.author.name || '익명'}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
+      {/* Meta info */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Link href={`/blog/${encodeURIComponent(post.author.username || post.author.name || '')}`}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: '0.9375rem',
+                color: '#212529',
+                cursor: 'pointer',
+                '&:hover': { color: '#ffa000' },
+              }}
+            >
+              {post.author.name || '익명'}
+            </Typography>
+          </Link>
+          <Typography sx={{ color: '#adb5bd' }}>·</Typography>
+          <Typography sx={{ fontSize: '0.9375rem', color: '#868e96' }}>
             {new Date(post.createdAt).toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: 'long',
@@ -97,140 +106,217 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
           </Typography>
         </Box>
         {isAuthor && (
-          <Box sx={{ ml: 'auto', display: 'flex', gap: 0.5 }}>
-            <Button size="small" variant="outlined" onClick={() => router.push(`/write?edit=${post.id}`)}>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              size="small"
+              sx={{ color: '#868e96', fontSize: '0.8125rem' }}
+              onClick={() => router.push(`/write?edit=${post.id}`)}
+            >
               수정
             </Button>
-            <Button size="small" variant="outlined" color="error" onClick={handleDelete}>
+            <Button size="small" sx={{ color: '#868e96', fontSize: '0.8125rem' }} onClick={handleDelete}>
               삭제
             </Button>
           </Box>
         )}
       </Box>
 
-      {/* Content */}
+      {/* Tags */}
+      {post.tags && (
+        <Box sx={{ display: 'flex', gap: 0.75, mb: 4, flexWrap: 'wrap' }}>
+          {post.tags.split(',').map((tag: string) => (
+            <Box
+              key={tag}
+              sx={{
+                px: 1.5,
+                py: 0.5,
+                backgroundColor: '#f8f9fa',
+                borderRadius: '12px',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                color: '#ffa000',
+              }}
+            >
+              {tag.trim()}
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      <Divider sx={{ mb: 4, borderColor: '#f1f3f5' }} />
+
+      {/* Cover image */}
       {post.image && (
         <CardMedia
           component="img"
           image={post.image}
           alt={post.title}
-          sx={{ borderRadius: 2, mb: 4, maxHeight: 480, objectFit: 'cover' }}
+          sx={{ borderRadius: '8px', mb: 4, maxHeight: 480, objectFit: 'cover' }}
         />
       )}
 
-      <Typography variant="body1" sx={{ mb: 5, whiteSpace: 'pre-wrap', lineHeight: 1.9 }}>
+      {/* Content */}
+      <Typography
+        sx={{
+          fontSize: '1.125rem',
+          lineHeight: 1.9,
+          color: '#212529',
+          mb: 6,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'keep-all',
+        }}
+      >
         {post.content}
       </Typography>
 
-      {/* Actions */}
+      {/* Author card */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 2,
+          gap: 2.5,
+          p: 3,
           mb: 4,
-          py: 2,
-          borderTop: '1px solid #eee',
-          borderBottom: '1px solid #eee',
+          borderRadius: '12px',
+          backgroundColor: '#f8f9fa',
         }}
       >
+        <Link href={`/blog/${encodeURIComponent(post.author.username || post.author.name || '')}`}>
+          <Avatar src={post.author.image} sx={{ width: 64, height: 64, cursor: 'pointer' }} />
+        </Link>
+        <Box>
+          <Link href={`/blog/${encodeURIComponent(post.author.username || post.author.name || '')}`}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: '1.125rem',
+                color: '#212529',
+                cursor: 'pointer',
+                '&:hover': { color: '#ffa000' },
+              }}
+            >
+              {post.author.name || '익명'}
+            </Typography>
+          </Link>
+          <Typography sx={{ fontSize: '0.875rem', color: '#868e96', mt: 0.25 }}>
+            {post.author.bio || '소개가 없습니다.'}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Like button */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 5 }}>
         <Box
           onClick={handleLike}
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 0.5,
+            gap: 1,
+            px: 3,
+            py: 1.5,
+            borderRadius: '20px',
+            border: liked ? '1px solid #ffa000' : '1px solid #dee2e6',
+            backgroundColor: liked ? 'rgba(255,160,0,0.06)' : '#fff',
             cursor: 'pointer',
-            px: 1.5,
-            py: 0.75,
-            borderRadius: 2,
             transition: 'all 0.15s',
-            '&:hover': { backgroundColor: '#fef2f2' },
+            '&:hover': { borderColor: '#ffa000', backgroundColor: 'rgba(255,160,0,0.04)' },
           }}
         >
           {liked ? (
-            <Favorite sx={{ fontSize: 20, color: '#ef4444' }} />
+            <Favorite sx={{ fontSize: 22, color: '#ffa000' }} />
           ) : (
-            <FavoriteBorder sx={{ fontSize: 20, color: '#999' }} />
+            <FavoriteBorder sx={{ fontSize: 22, color: '#adb5bd' }} />
           )}
-          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: liked ? '#ffa000' : '#868e96' }}>
             {likeCount}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: '#999' }}>
-          <ChatBubbleOutline sx={{ fontSize: 20 }} />
-          <Typography variant="body2" sx={{ fontWeight: 500 }}>
-            {comments.length}
           </Typography>
         </Box>
       </Box>
 
+      <Divider sx={{ mb: 4, borderColor: '#f1f3f5' }} />
+
       {/* Comments */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>
-          댓글
+        <Typography sx={{ fontWeight: 700, fontSize: '1.125rem', color: '#212529', mb: 3 }}>
+          {comments.length}개의 댓글
         </Typography>
 
         {session ? (
-          <Box sx={{ display: 'flex', gap: 1.5, mb: 3, alignItems: 'flex-start' }}>
-            <Avatar src={session.user?.image || ''} sx={{ width: 32, height: 32, mt: 0.5 }} />
-            <Box sx={{ flex: 1 }}>
-              <TextField
-                fullWidth
-                size="small"
-                multiline
-                minRows={2}
-                placeholder="댓글을 작성해주세요..."
-                value={commentText}
-                onChange={e => setCommentText(e.target.value)}
-              />
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                <Button size="small" variant="contained" onClick={handleComment} disabled={!commentText.trim()}>
-                  등록
-                </Button>
-              </Box>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              fullWidth
+              multiline
+              minRows={3}
+              placeholder="댓글을 작성하세요"
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
+              sx={{
+                mb: 1.5,
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#fff',
+                  borderRadius: '8px',
+                },
+              }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                variant="contained"
+                onClick={handleComment}
+                disabled={!commentText.trim()}
+                sx={{ borderRadius: '20px', px: 3 }}
+              >
+                댓글 작성
+              </Button>
             </Box>
           </Box>
         ) : (
-          <Paper elevation={0} sx={{ p: 2.5, mb: 3, textAlign: 'center', backgroundColor: '#f9f9f9', borderRadius: 2 }}>
-            <Typography variant="body2" color="text.secondary">
+          <Box
+            sx={{
+              p: 3,
+              mb: 4,
+              textAlign: 'center',
+              backgroundColor: '#f8f9fa',
+              borderRadius: '8px',
+            }}
+          >
+            <Typography sx={{ fontSize: '0.9375rem', color: '#868e96' }}>
               댓글을 작성하려면{' '}
               <Box
                 component="span"
                 onClick={() => router.push('/login')}
-                sx={{ color: 'primary.main', cursor: 'pointer', fontWeight: 600 }}
+                sx={{ color: '#ffa000', cursor: 'pointer', fontWeight: 700 }}
               >
                 로그인
               </Box>
               해주세요
             </Typography>
-          </Paper>
+          </Box>
         )}
 
         {comments.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
-            아직 댓글이 없습니다
+          <Typography sx={{ textAlign: 'center', py: 3, color: '#adb5bd', fontSize: '0.875rem' }}>
+            아직 댓글이 없습니다. 첫 댓글을 남겨보세요!
           </Typography>
         ) : (
           comments.map((comment: any, index: number) => (
             <Box key={comment.id}>
-              <Box sx={{ display: 'flex', gap: 1.5, py: 2 }}>
-                <Avatar src={comment.author.image} sx={{ width: 28, height: 28, mt: 0.3 }} />
-                <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.3 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              <Box sx={{ py: 2.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <Avatar src={comment.author.image} sx={{ width: 32, height: 32 }} />
+                  <Box>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.875rem', color: '#212529' }}>
                       {comment.author.name || '익명'}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography sx={{ fontSize: '0.75rem', color: '#adb5bd' }}>
                       {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-                    {comment.content}
-                  </Typography>
                 </Box>
+                <Typography sx={{ fontSize: '0.9375rem', lineHeight: 1.7, color: '#212529', pl: 5.5 }}>
+                  {comment.content}
+                </Typography>
               </Box>
-              {index < comments.length - 1 && <Divider />}
+              {index < comments.length - 1 && <Divider sx={{ borderColor: '#f1f3f5' }} />}
             </Box>
           ))
         )}

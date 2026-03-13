@@ -1,6 +1,6 @@
 import { signIn } from 'next-auth/react';
 import { Google as GoogleIcon } from '@mui/icons-material';
-import { Typography, Button, Box, Paper } from '@mui/material';
+import { Typography, Button, Box } from '@mui/material';
 
 const LoginPage = () => {
   return (
@@ -12,38 +12,27 @@ const LoginPage = () => {
         minHeight: 'calc(100vh - 200px)',
       }}
     >
-      <Paper
-        elevation={0}
-        sx={{
-          p: 5,
-          maxWidth: 400,
-          width: '100%',
-          textAlign: 'center',
-          border: '1px solid #eee',
-          borderRadius: 3,
-        }}
-      >
+      <Box sx={{ maxWidth: 380, width: '100%', textAlign: 'center' }}>
+        {/* Logo */}
         <Box
           sx={{
-            width: 56,
-            height: 56,
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255,160,0,0.1)',
+            width: 64,
+            height: 64,
+            borderRadius: '16px',
+            background: 'linear-gradient(135deg, #ffa000, #ff8f00)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             mx: 'auto',
-            mb: 2,
+            mb: 3,
           }}
         >
-          <Typography sx={{ fontSize: 28 }}>B</Typography>
+          <Typography sx={{ color: '#fff', fontWeight: 800, fontSize: 32 }}>B</Typography>
         </Box>
-        <Typography variant="h3" sx={{ mb: 1 }}>
-          로그인
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-          소셜 계정으로 간편하게 시작하세요
-        </Typography>
+
+        <Typography sx={{ fontWeight: 800, fontSize: '1.75rem', color: '#212529', mb: 0.5 }}>환영합니다!</Typography>
+        <Typography sx={{ fontSize: '1rem', color: '#868e96', mb: 4 }}>소셜 계정으로 간편하게 시작하세요</Typography>
+
         <Button
           fullWidth
           variant="outlined"
@@ -52,17 +41,25 @@ const LoginPage = () => {
           onClick={() => signIn('google', { callbackUrl: '/' })}
           sx={{
             py: 1.5,
-            borderColor: '#ddd',
-            color: '#333',
+            borderColor: '#dee2e6',
+            borderRadius: '12px',
+            color: '#212529',
+            fontWeight: 600,
+            fontSize: '0.9375rem',
+            backgroundColor: '#fff',
             '&:hover': {
-              borderColor: '#bbb',
-              backgroundColor: '#fafafa',
+              borderColor: '#ffa000',
+              backgroundColor: '#fffbf0',
             },
           }}
         >
           Google로 계속하기
         </Button>
-      </Paper>
+
+        <Typography sx={{ mt: 4, fontSize: '0.75rem', color: '#adb5bd' }}>
+          로그인함으로써 서비스 이용약관에 동의합니다.
+        </Typography>
+      </Box>
     </Box>
   );
 };

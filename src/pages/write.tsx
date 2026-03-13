@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import { Close as CloseIcon, CloudUpload as UploadIcon, Add as AddIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Image as ImageIcon } from '@mui/icons-material';
 import {
-  Typography,
   TextField,
   Button,
   Box,
@@ -12,8 +11,6 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel,
-  Paper,
   IconButton,
   Chip,
 } from '@mui/material';
@@ -62,11 +59,6 @@ const WritePage = () => {
     }
   }, [router.query.edit]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedFile(file);
-  };
-
   const handleSubmit = async () => {
     if (!session) return;
     if (!title.trim() || !content.trim()) {
@@ -103,29 +95,89 @@ const WritePage = () => {
   if (status === 'loading') return null;
 
   return (
-    <Box sx={{ maxWidth: 720, mx: 'auto' }}>
-      <Typography variant="h2" sx={{ mb: 3 }}>
-        {isEdit ? '글 수정' : '새 글 작성'}
-      </Typography>
+    <Box sx={{ maxWidth: 768, mx: 'auto', pt: 2 }}>
+      {/* Title input - velog style large */}
+      <TextField
+        fullWidth
+        placeholder="제목을 입력하세요"
+        variant="standard"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        InputProps={{
+          disableUnderline: true,
+          sx: {
+            fontSize: '2.5rem',
+            fontWeight: 800,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2,
+            py: 1,
+          },
+        }}
+        sx={{ mb: 1 }}
+      />
 
-      <Paper elevation={0} sx={{ p: 3, border: '1px solid #eee', borderRadius: 2 }}>
+      {/* Divider bar */}
+      <Box sx={{ width: 64, height: 6, backgroundColor: '#ffa000', borderRadius: 3, mb: 3 }} />
+
+      {/* Tags */}
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mb: tags.length > 0 ? 1 : 0 }}>
+          {tags.map(tag => (
+            <Chip
+              key={tag}
+              label={tag}
+              size="small"
+              onDelete={() => setTags(prev => prev.filter(t => t !== tag))}
+              sx={{
+                backgroundColor: 'rgba(255,160,0,0.08)',
+                color: '#ffa000',
+                fontWeight: 600,
+                '& .MuiChip-deleteIcon': { color: '#ffa000' },
+              }}
+            />
+          ))}
+        </Box>
         <TextField
-          fullWidth
-          placeholder="제목을 입력하세요"
+          size="small"
+          placeholder="태그를 입력하세요 (Enter로 추가)"
+          value={tagInput}
+          onChange={e => setTagInput(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ',') {
+              e.preventDefault();
+              const newTags = tagInput
+                .split(',')
+                .map(t => t.trim())
+                .filter(t => t && !tags.includes(t));
+              if (newTags.length > 0) {
+                setTags(prev => [...prev, ...newTags]);
+              }
+              setTagInput('');
+            }
+          }}
           variant="standard"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
           InputProps={{
             disableUnderline: true,
-            sx: { fontSize: '1.5rem', fontWeight: 600, pb: 1 },
+            sx: { fontSize: '1rem' },
           }}
-          sx={{ mb: 2 }}
+          sx={{ width: '100%', maxWidth: 320 }}
         />
+      </Box>
 
-        <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-          <InputLabel>카테고리 선택</InputLabel>
-          <Select value={categoryId} label="카테고리 선택" onChange={e => setCategoryId(e.target.value)}>
-            <MenuItem value="">선택 안함</MenuItem>
+      {/* Category + Image upload toolbar */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+        <FormControl size="small" sx={{ minWidth: 140 }}>
+          <Select
+            displayEmpty
+            value={categoryId}
+            onChange={e => setCategoryId(e.target.value)}
+            sx={{
+              borderRadius: '8px',
+              fontSize: '0.875rem',
+              backgroundColor: '#fff',
+            }}
+          >
+            <MenuItem value="">카테고리 선택</MenuItem>
             {categories.map(cat => (
               <MenuItem key={cat.id} value={cat.id}>
                 {cat.name}
@@ -134,117 +186,103 @@ const WritePage = () => {
           </Select>
         </FormControl>
 
-        <TextField
-          fullWidth
-          multiline
-          minRows={12}
-          placeholder="내용을 작성하세요..."
-          variant="outlined"
-          value={content}
-          onChange={e => setContent(e.target.value)}
+        <IconButton
+          component="label"
           sx={{
-            mb: 2,
-            '& .MuiOutlinedInput-root': {
-              fontSize: '1rem',
-              lineHeight: 1.8,
-            },
+            border: '1px solid #dee2e6',
+            borderRadius: '8px',
+            width: 40,
+            height: 40,
           }}
-        />
-
-        <Box sx={{ mb: 2 }}>
-          <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mb: 1 }}>
-            {tags.map(tag => (
-              <Chip key={tag} label={tag} size="small" onDelete={() => setTags(prev => prev.filter(t => t !== tag))} />
-            ))}
-          </Box>
-          <TextField
-            size="small"
-            placeholder="태그를 입력하고 Enter (쉼표로 구분 가능)"
-            value={tagInput}
-            onChange={e => setTagInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' || e.key === ',') {
-                e.preventDefault();
-                const newTags = tagInput
-                  .split(',')
-                  .map(t => t.trim())
-                  .filter(t => t && !tags.includes(t));
-                if (newTags.length > 0) {
-                  setTags(prev => [...prev, ...newTags]);
-                }
-                setTagInput('');
-              }
-            }}
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    const newTags = tagInput
-                      .split(',')
-                      .map(t => t.trim())
-                      .filter(t => t && !tags.includes(t));
-                    if (newTags.length > 0) {
-                      setTags(prev => [...prev, ...newTags]);
-                    }
-                    setTagInput('');
-                  }}
-                >
-                  <AddIcon fontSize="small" />
-                </IconButton>
-              ),
-            }}
-            sx={{ width: '100%', maxWidth: 360 }}
+        >
+          <ImageIcon sx={{ fontSize: 20, color: '#868e96' }} />
+          <input
+            type="file"
+            accept="image/*,video/*,audio/*"
+            hidden
+            onChange={e => setSelectedFile(e.target.files?.[0] || null)}
           />
-        </Box>
+        </IconButton>
+      </Box>
 
-        <Box sx={{ mb: 2 }}>
-          <Button component="label" variant="outlined" startIcon={<UploadIcon />} sx={{ borderStyle: 'dashed' }}>
-            파일 첨부
-            <input type="file" accept="image/*,video/*,audio/*" hidden onChange={handleFileChange} />
-          </Button>
-          {selectedFile && (
-            <Card sx={{ mt: 1.5, maxWidth: 320, position: 'relative' }}>
-              <IconButton
-                size="small"
-                onClick={() => setSelectedFile(null)}
-                sx={{
-                  position: 'absolute',
-                  top: 4,
-                  right: 4,
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
-                }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-              {selectedFile.type?.startsWith('image/') && (
-                <CardMedia component="img" height={180} image={URL.createObjectURL(selectedFile)} alt="미리보기" />
-              )}
-              {selectedFile.type?.startsWith('video/') && (
-                <CardMedia component="video" controls height={180} src={URL.createObjectURL(selectedFile)} />
-              )}
-              {selectedFile.type?.startsWith('audio/') && (
-                <Box sx={{ p: 2 }}>
-                  <audio controls style={{ width: '100%' }}>
-                    <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
-                  </audio>
-                </Box>
-              )}
-            </Card>
+      {/* File preview */}
+      {selectedFile && (
+        <Card sx={{ mb: 3, maxWidth: 400, position: 'relative', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+          <IconButton
+            size="small"
+            onClick={() => setSelectedFile(null)}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              color: '#fff',
+              zIndex: 1,
+              '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+          {selectedFile.type?.startsWith('image/') && (
+            <CardMedia component="img" height={200} image={URL.createObjectURL(selectedFile)} alt="미리보기" />
           )}
-        </Box>
+          {selectedFile.type?.startsWith('video/') && (
+            <CardMedia component="video" controls height={200} src={URL.createObjectURL(selectedFile)} />
+          )}
+          {selectedFile.type?.startsWith('audio/') && (
+            <Box sx={{ p: 2 }}>
+              <audio controls style={{ width: '100%' }}>
+                <source src={URL.createObjectURL(selectedFile)} type={selectedFile.type} />
+              </audio>
+            </Box>
+          )}
+        </Card>
+      )}
 
-        <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'flex-end' }}>
-          <Button variant="outlined" onClick={() => router.back()}>
-            취소
+      {/* Content editor */}
+      <TextField
+        fullWidth
+        multiline
+        minRows={16}
+        placeholder="당신의 이야기를 적어보세요..."
+        variant="standard"
+        value={content}
+        onChange={e => setContent(e.target.value)}
+        InputProps={{
+          disableUnderline: true,
+          sx: {
+            fontSize: '1.125rem',
+            lineHeight: 1.8,
+          },
+        }}
+        sx={{ mb: 4 }}
+      />
+
+      {/* Bottom action bar */}
+      <Box
+        sx={{
+          position: 'sticky',
+          bottom: 0,
+          py: 2,
+          backgroundColor: '#f8f9fa',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderTop: '1px solid #f1f3f5',
+        }}
+      >
+        <Button sx={{ color: '#868e96', fontWeight: 600 }} onClick={() => router.back()}>
+          &#x2190; 나가기
+        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button variant="outlined" sx={{ borderRadius: '20px', borderColor: '#dee2e6', color: '#868e96' }}>
+            임시저장
           </Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={uploading}>
-            {uploading ? '저장 중...' : isEdit ? '수정 완료' : '발행'}
+          <Button variant="contained" onClick={handleSubmit} disabled={uploading} sx={{ borderRadius: '20px', px: 3 }}>
+            {uploading ? '저장 중...' : isEdit ? '수정하기' : '출간하기'}
           </Button>
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 };
