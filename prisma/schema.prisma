@@ -1,6 +1,7 @@
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -67,7 +68,7 @@ model VerificationToken {
 model Post {
   id         String    @id @default(cuid())
   title      String
-  content    String
+  content    String    @db.Text
   image      String?
   published  Boolean   @default(true)
   tags       String?
@@ -89,7 +90,7 @@ model Category {
 
 model Comment {
   id        String   @id @default(cuid())
-  content   String
+  content   String   @db.Text
   postId    String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   authorId  String
