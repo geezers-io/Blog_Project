@@ -72,9 +72,12 @@ public class PostController {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         long likeCount = likeService.getLikeCount(id);
-        long commentCount = post.getComments().size();
+        List<Comment> comments = commentService.getComments(id);
 
-        PostResponse response = PostResponse.from(post, likeCount, commentCount);
+        PostResponse response = PostResponse.from(post, likeCount, comments.size());
+        response.setComments(comments.stream()
+                .map(CommentResponse::from)
+                .collect(Collectors.toList()));
         return ResponseEntity.ok(response);
     }
 

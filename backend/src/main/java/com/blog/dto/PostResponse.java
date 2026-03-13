@@ -6,6 +6,7 @@ import com.blog.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PostResponse {
 
@@ -19,6 +20,7 @@ public class PostResponse {
     private String categoryId;
     private CategoryResponse category;
     private AuthorResponse author;
+    private List<CommentResponse> comments;
 
     @JsonProperty("_count")
     private CountResponse count;
@@ -87,4 +89,7 @@ public class PostResponse {
 
     public CountResponse getCount() { return count; }
     public void setCount(CountResponse count) { this.count = count; }
+
+    public List<CommentResponse> getComments() { return comments; }
+    public void setComments(List<CommentResponse> comments) { this.comments = comments; }
 }

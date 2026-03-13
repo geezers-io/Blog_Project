@@ -20,10 +20,10 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { data: session } = useSession();
-  const [comments, setComments] = useState(post.comments);
+  const [comments, setComments] = useState(post.comments || []);
   const [commentText, setCommentText] = useState('');
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post._count.likes);
+  const [likeCount, setLikeCount] = useState(post._count?.likes || 0);
 
   const isAuthor = (session?.user as any)?.id === post.author.id;
 
