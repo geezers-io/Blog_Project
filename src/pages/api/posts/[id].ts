@@ -46,10 +46,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(403).json({ message: '수정 권한이 없습니다.' });
     }
 
-    const { title, content, image, categoryId } = req.body;
+    const { title, content, image, categoryId, tags } = req.body;
     const post = await prisma.post.update({
       where: { id },
-      data: { title, content, image, categoryId },
+      data: { title, content, image, categoryId, tags },
       include: {
         author: { select: { id: true, name: true, image: true } },
         category: true,

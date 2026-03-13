@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         skip,
         take: limitNum,
         include: {
-          author: { select: { id: true, name: true, image: true } },
+          author: { select: { id: true, name: true, username: true, image: true } },
           category: true,
           _count: { select: { comments: true, likes: true } },
         },
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
 
-    const { title, content, image, categoryId } = req.body;
+    const { title, content, image, categoryId, tags } = req.body;
     if (!title || !content) {
       return res.status(400).json({ message: '제목과 내용은 필수입니다.' });
     }
@@ -67,6 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         content,
         image,
         categoryId,
+        tags,
         authorId: userId,
       },
       include: {

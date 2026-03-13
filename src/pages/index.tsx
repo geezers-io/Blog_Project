@@ -13,7 +13,7 @@ interface Post {
   content: string;
   image: string | null;
   createdAt: string;
-  author: { id: string; name: string | null; image: string | null };
+  author: { id: string; name: string | null; username: string | null; image: string | null };
   category: { id: string; name: string } | null;
   _count: { comments: number; likes: number };
 }
@@ -51,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
       skip: (pageNum - 1) * limit,
       take: limit,
       include: {
-        author: { select: { id: true, name: true, image: true } },
+        author: { select: { id: true, name: true, username: true, image: true } },
         category: true,
         _count: { select: { comments: true, likes: true } },
       },

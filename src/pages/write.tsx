@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import { Close as CloseIcon, CloudUpload as UploadIcon } from '@mui/icons-material';
+import { Close as CloseIcon, CloudUpload as UploadIcon, Add as AddIcon } from '@mui/icons-material';
 import {
   Typography,
   TextField,
@@ -15,6 +15,7 @@ import {
   InputLabel,
   Paper,
   IconButton,
+  Chip,
 } from '@mui/material';
 
 interface Category {
@@ -29,6 +30,8 @@ const WritePage = () => {
   const [content, setContent] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const isEdit = Boolean(router.query.edit);
@@ -55,6 +58,7 @@ const WritePage = () => {
           setTitle(post.title);
           setContent(post.content);
           setCategoryId(post.categoryId || '');
+          if (post.tags) setTags(post.tags.split(',').map((t: string) => t.trim()));
         })
         .catch(console.error);
     }
@@ -97,6 +101,7 @@ const WritePage = () => {
           content,
           image: imageUrl,
           categoryId: categoryId || undefined,
+          tags: tags.length > 0 ? tags.join(',') : undefined,
         }),
       });
 
@@ -164,6 +169,53 @@ const WritePage = () => {
             },
           }}
         />
+
+        <Box sx={{ mb: 2 }}>
+          <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mb: 1 }}>
+            {tags.map(tag => (
+              <Chip key={tag} label={tag} size="small" onDelete={() => setTags(prev => prev.filter(t => t !== tag))} />
+            ))}
+          </Box>
+          <TextField
+            size="small"
+            placeholder="태그를 입력하고 Enter (쉼표로 구분 가능)"
+            value={tagInput}
+            onChange={e => setTagInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const newTags = tagInput
+                  .split(',')
+                  .map(t => t.trim())
+                  .filter(t => t && !tags.includes(t));
+                if (newTags.length > 0) {
+                  setTags(prev => [...prev, ...newTags]);
+                }
+                setTagInput('');
+              }
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    const newTags = tagInput
+                      .split(',')
+                      .map(t => t.trim())
+                      .filter(t => t && !tags.includes(t));
+                    if (newTags.length > 0) {
+                      setTags(prev => [...prev, ...newTags]);
+                    }
+                    setTagInput('');
+                  }}
+                >
+                  <AddIcon fontSize="small" />
+                </IconButton>
+              ),
+            }}
+            sx={{ width: '100%', maxWidth: 360 }}
+          />
+        </Box>
 
         <Box sx={{ mb: 2 }}>
           <Button component="label" variant="outlined" startIcon={<UploadIcon />} sx={{ borderStyle: 'dashed' }}>

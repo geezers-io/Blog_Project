@@ -116,11 +116,21 @@ const Header = () => {
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
-                      router.push('/profile');
+                      const name = session.user?.name;
+                      if (name) router.push(`/blog/${encodeURIComponent(name)}`);
                     }}
                   >
-                    프로필
+                    내 블로그
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      router.push('/settings');
+                    }}
+                  >
+                    블로그 설정
+                  </MenuItem>
+                  <Divider />
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();

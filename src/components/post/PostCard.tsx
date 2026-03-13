@@ -8,7 +8,7 @@ interface PostCardProps {
   content: string;
   image: string | null;
   createdAt: string;
-  author: { name: string | null; image: string | null };
+  author: { name: string | null; username: string | null; image: string | null };
   category: { name: string } | null;
   _count: { comments: number; likes: number };
 }
@@ -51,7 +51,19 @@ const PostCard = ({ id, title, content, image, createdAt, author, category, _cou
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Avatar src={author.image || ''} sx={{ width: 24, height: 24 }} />
-              <Typography variant="caption" sx={{ fontWeight: 500 }}>
+              <Typography
+                variant="caption"
+                component="span"
+                onClick={e => {
+                  const slug = author.username || author.name;
+                  if (slug) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = `/blog/${encodeURIComponent(slug)}`;
+                  }
+                }}
+                sx={{ fontWeight: 500, cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+              >
                 {author.name || '익명'}
               </Typography>
               <Typography variant="caption" color="text.secondary">
