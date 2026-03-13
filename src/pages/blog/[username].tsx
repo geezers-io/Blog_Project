@@ -9,7 +9,7 @@ import VisitorCounter from '@/components/blog/VisitorCounter';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { username } = context.params as { username: string };
-  const API_URL = process.env.API_URL || 'http://localhost:8080/api';
+  const API_URL = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api`;
 
   try {
     const res = await fetch(`${API_URL}/blog/${encodeURIComponent(username)}`, { signal: AbortSignal.timeout(5000) });

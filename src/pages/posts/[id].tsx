@@ -8,7 +8,7 @@ import { api } from '@/lib/api';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { id } = context.params as { id: string };
-  const API_URL = process.env.API_URL || 'http://localhost:8080/api';
+  const API_URL = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api`;
 
   try {
     const res = await fetch(`${API_URL}/posts/${id}`, { signal: AbortSignal.timeout(5000) });

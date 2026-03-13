@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   params.set('page', page as string);
   params.set('limit', '12');
 
-  const API_URL = process.env.API_URL || 'http://localhost:8080/api';
+  const API_URL = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api`;
 
   try {
     const fetchOpts = { signal: AbortSignal.timeout(5000) };
@@ -97,7 +97,7 @@ const HomePage = ({
     if (filters.sort) params.set('sort', filters.sort);
     if (filters.search) params.set('search', filters.search);
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+    const apiUrl = '/api';
     const res = await fetch(`${apiUrl}/posts?${params.toString()}`);
     const data = await res.json();
 
