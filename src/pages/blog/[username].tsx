@@ -11,17 +11,21 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { username } = context.params as { username: string };
   const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
-  const res = await fetch(`${API_URL}/blog/${encodeURIComponent(username)}`);
-  if (!res.ok) return { notFound: true };
+  try {
+    const res = await fetch(`${API_URL}/blog/${encodeURIComponent(username)}`);
+    if (!res.ok) return { notFound: true };
 
-  const data = await res.json();
-  return {
-    props: {
-      blogUser: data.user,
-      posts: data.posts,
-      tags: data.tags,
-    },
-  };
+    const data = await res.json();
+    return {
+      props: {
+        blogUser: data.user,
+        posts: data.posts || [],
+        tags: data.tags || [],
+      },
+    };
+  } catch {
+    return { notFound: true };
+  }
 };
 
 const BlogPage = ({ blogUser, posts, tags }: InferGetServerSidePropsType<typeof getServerSideProps>) => {

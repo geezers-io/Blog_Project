@@ -10,11 +10,15 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { id } = context.params as { id: string };
   const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
-  const res = await fetch(`${API_URL}/posts/${id}`);
-  if (!res.ok) return { notFound: true };
+  try {
+    const res = await fetch(`${API_URL}/posts/${id}`);
+    if (!res.ok) return { notFound: true };
 
-  const post = await res.json();
-  return { props: { post } };
+    const post = await res.json();
+    return { props: { post } };
+  } catch {
+    return { notFound: true };
+  }
 };
 
 const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {

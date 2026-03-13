@@ -34,28 +34,45 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
-  const [postsRes, catsRes] = await Promise.all([
-    fetch(`${API_URL}/posts?${params.toString()}`),
-    fetch(`${API_URL}/categories`),
-  ]);
+  try {
+    const [postsRes, catsRes] = await Promise.all([
+      fetch(`${API_URL}/posts?${params.toString()}`),
+      fetch(`${API_URL}/categories`),
+    ]);
 
-  const postsData = await postsRes.json();
-  const categories = await catsRes.json();
+    const postsData = await postsRes.json();
+    const categories = await catsRes.json();
 
-  return {
-    props: {
-      posts: postsData.posts || [],
-      total: postsData.total || 0,
-      currentPage: parseInt(page as string, 10),
-      totalPages: postsData.totalPages || 1,
-      categories,
-      filters: {
-        category: (category as string) || null,
-        sort: (sort as string) || 'recent',
-        search: (search as string) || '',
+    return {
+      props: {
+        posts: postsData.posts || [],
+        total: postsData.total || 0,
+        currentPage: parseInt(page as string, 10),
+        totalPages: postsData.totalPages || 1,
+        categories: Array.isArray(categories) ? categories : [],
+        filters: {
+          category: (category as string) || null,
+          sort: (sort as string) || 'recent',
+          search: (search as string) || '',
+        },
       },
-    },
-  };
+    };
+  } catch {
+    return {
+      props: {
+        posts: [],
+        total: 0,
+        currentPage: 1,
+        totalPages: 1,
+        categories: [],
+        filters: {
+          category: (category as string) || null,
+          sort: (sort as string) || 'recent',
+          search: (search as string) || '',
+        },
+      },
+    };
+  }
 };
 
 const HomePage = ({
