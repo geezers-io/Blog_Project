@@ -1,37 +1,12 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
-
-let authToken: string | null = null;
-
-export const setAuthToken = (token: string | null) => {
-  authToken = token;
-  if (token) {
-    if (typeof window !== 'undefined') localStorage.setItem('blog_token', token);
-  } else {
-    if (typeof window !== 'undefined') localStorage.removeItem('blog_token');
-  }
-};
-
-export const getAuthToken = (): string | null => {
-  if (authToken) return authToken;
-  if (typeof window !== 'undefined') {
-    authToken = localStorage.getItem('blog_token');
-  }
-  return authToken;
-};
+const API_BASE = '/api';
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
-  const token = getAuthToken();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options?.headers as Record<string, string>),
-  };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   const res = await fetch(`${API_BASE}${url}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
     ...options,
-    headers,
   });
 
   if (!res.ok) {
@@ -39,17 +14,10 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     throw new Error(error.message || `HTTP ${res.status}`);
   }
 
-  // 204 No Content 등 빈 응답 처리
-  const text = await res.text();
-  if (!text) return {} as T;
-  return JSON.parse(text);
+  return res.json();
 }
 
 export const api = {
-  // Auth
-  syncAuth: (data: { email: string; name: string; image: string }) =>
-    request<{ token: string; user: any }>('/auth/sync', { method: 'POST', body: JSON.stringify(data) }),
-
   // Posts
   getPosts: (params?: Record<string, string>) => {
     const query = params ? '?' + new URLSearchParams(params).toString() : '';
@@ -88,10 +56,8 @@ export const api = {
   uploadFile: async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-    const token = getAuthToken();
     const res = await fetch(`${API_BASE}/upload`, {
       method: 'POST',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: formData,
     });
     if (!res.ok) throw new Error('Upload failed');
