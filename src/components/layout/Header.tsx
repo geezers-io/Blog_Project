@@ -17,6 +17,7 @@ import {
   Divider,
   Container,
 } from '@mui/material';
+import { setAuthToken } from '@/lib/api';
 
 const Header = () => {
   const router = useRouter();
@@ -134,6 +135,7 @@ const Header = () => {
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
+                      setAuthToken(null);
                       signOut();
                     }}
                     sx={{ color: '#ef4444' }}

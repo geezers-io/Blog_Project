@@ -9,33 +9,19 @@ import theme from '@/styles/theme';
 import '@/styles/globals.css';
 
 function AuthSync() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const syncAuth = async () => {
-      if (session?.user?.email) {
-        try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
-          const res = await fetch(`${apiUrl}/auth/sync`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: session.user.email,
-              name: session.user.name || '',
-              image: session.user.image || '',
-            }),
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setAuthToken(data.token);
-          }
-        } catch (e) {
-          console.error('Auth sync failed:', e);
-        }
+    if (status === 'authenticated' && session?.user) {
+      const token = (session.user as any).backendToken;
+      if (token) {
+        setAuthToken(token);
       }
-    };
-    syncAuth();
-  }, [session]);
+    }
+    if (status === 'unauthenticated') {
+      setAuthToken(null);
+    }
+  }, [session, status]);
 
   return null;
 }

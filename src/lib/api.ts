@@ -39,7 +39,10 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     throw new Error(error.message || `HTTP ${res.status}`);
   }
 
-  return res.json();
+  // 204 No Content 등 빈 응답 처리
+  const text = await res.text();
+  if (!text) return {} as T;
+  return JSON.parse(text);
 }
 
 export const api = {
