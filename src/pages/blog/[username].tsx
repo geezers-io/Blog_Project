@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
   try {
-    const res = await fetch(`${API_URL}/blog/${encodeURIComponent(username)}`);
+    const res = await fetch(`${API_URL}/blog/${encodeURIComponent(username)}`, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) return { notFound: true };
 
     const data = await res.json();

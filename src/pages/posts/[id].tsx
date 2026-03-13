@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
   try {
-    const res = await fetch(`${API_URL}/posts/${id}`);
+    const res = await fetch(`${API_URL}/posts/${id}`, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) return { notFound: true };
 
     const post = await res.json();

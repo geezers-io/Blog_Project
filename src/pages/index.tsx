@@ -35,9 +35,10 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
   try {
+    const fetchOpts = { signal: AbortSignal.timeout(5000) };
     const [postsRes, catsRes] = await Promise.all([
-      fetch(`${API_URL}/posts?${params.toString()}`),
-      fetch(`${API_URL}/categories`),
+      fetch(`${API_URL}/posts?${params.toString()}`, fetchOpts),
+      fetch(`${API_URL}/categories`, fetchOpts),
     ]);
 
     const postsData = await postsRes.json();
