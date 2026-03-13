@@ -19,7 +19,7 @@ const LoginPage = () => {
             width: 64,
             height: 64,
             borderRadius: '16px',
-            background: 'linear-gradient(135deg, #ffa000, #ff8f00)',
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -48,8 +48,8 @@ const LoginPage = () => {
             fontSize: '0.9375rem',
             backgroundColor: '#fff',
             '&:hover': {
-              borderColor: '#ffa000',
-              backgroundColor: '#fffbf0',
+              borderColor: '#f59e0b',
+              backgroundColor: '#fffbeb',
             },
           }}
         >

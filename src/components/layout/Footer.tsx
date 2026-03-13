@@ -5,14 +5,13 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        py: 4,
+        py: 3,
         mt: 'auto',
-        borderTop: '1px solid #eee',
-        backgroundColor: '#fff',
+        borderTop: '1px solid #f1f5f9',
       }}
     >
-      <Container maxWidth="lg">
-        <Typography variant="body2" color="text.secondary" align="center">
+      <Container maxWidth="xl">
+        <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center' }}>
           &copy; {new Date().getFullYear()} Blog. All rights reserved.
         </Typography>
       </Container>

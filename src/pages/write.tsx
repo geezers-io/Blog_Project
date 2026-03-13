@@ -117,7 +117,7 @@ const WritePage = () => {
       />
 
       {/* Divider bar */}
-      <Box sx={{ width: 64, height: 6, backgroundColor: '#ffa000', borderRadius: 3, mb: 3 }} />
+      <Box sx={{ width: 64, height: 6, backgroundColor: '#f59e0b', borderRadius: 3, mb: 3 }} />
 
       {/* Tags */}
       <Box sx={{ mb: 3 }}>
@@ -130,9 +130,9 @@ const WritePage = () => {
               onDelete={() => setTags(prev => prev.filter(t => t !== tag))}
               sx={{
                 backgroundColor: 'rgba(255,160,0,0.08)',
-                color: '#ffa000',
+                color: '#f59e0b',
                 fontWeight: 600,
-                '& .MuiChip-deleteIcon': { color: '#ffa000' },
+                '& .MuiChip-deleteIcon': { color: '#f59e0b' },
               }}
             />
           ))}

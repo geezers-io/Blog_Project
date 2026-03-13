@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FavoriteBorder } from '@mui/icons-material';
+import { FavoriteBorder, ChatBubbleOutline } from '@mui/icons-material';
 import { Card, CardContent, CardMedia, Typography, Box, Avatar } from '@mui/material';
 
 interface PostCardProps {
@@ -14,30 +14,59 @@ interface PostCardProps {
 }
 
 const PostCard = ({ id, title, content, image, createdAt, author, category, _count }: PostCardProps) => {
+  const readTime = Math.max(1, Math.ceil(content.length / 500));
+
   return (
     <Link href={`/posts/${id}`}>
       <Card
         sx={{
           cursor: 'pointer',
           overflow: 'hidden',
-          backgroundColor: '#fff',
-          borderRadius: '4px',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          '&:hover': {
+            borderColor: '#e2e8f0',
+            boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
+          },
+          '&:hover .card-title': {
+            color: '#d97706',
+          },
         }}
       >
-        {image && <CardMedia component="img" height={167} image={image} alt={title} sx={{ objectFit: 'cover' }} />}
-        <CardContent sx={{ p: 2.5 }}>
+        {image && <CardMedia component="img" height={180} image={image} alt={title} sx={{ objectFit: 'cover' }} />}
+        <CardContent sx={{ p: 2.5, flex: 1, display: 'flex', flexDirection: 'column' }}>
+          {category && (
+            <Typography
+              sx={{
+                display: 'inline-block',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: '#d97706',
+                backgroundColor: '#fffbeb',
+                px: 1,
+                py: 0.25,
+                borderRadius: '6px',
+                mb: 1,
+                width: 'fit-content',
+              }}
+            >
+              {category.name}
+            </Typography>
+          )}
           <Typography
+            className="card-title"
             sx={{
               fontWeight: 700,
-              fontSize: '1rem',
-              lineHeight: 1.5,
-              mb: 0.5,
+              fontSize: '1.0625rem',
+              lineHeight: 1.4,
+              color: '#1e293b',
+              mb: 0.75,
+              transition: 'color 0.15s',
               display: '-webkit-box',
-              WebkitLineClamp: 1,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
-              color: '#212529',
             }}
           >
             {title}
@@ -46,74 +75,51 @@ const PostCard = ({ id, title, content, image, createdAt, author, category, _cou
             sx={{
               fontSize: '0.8125rem',
               lineHeight: 1.6,
-              color: '#495057',
+              color: '#64748b',
               mb: 2,
+              flex: 1,
               display: '-webkit-box',
-              WebkitLineClamp: 3,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
             }}
           >
             {content}
           </Typography>
-          {category && (
-            <Typography
-              sx={{
-                display: 'inline-block',
-                fontSize: '0.75rem',
-                color: '#e65100',
-                fontWeight: 600,
-                mb: 1.5,
+
+          {/* Author + meta */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 'auto' }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}
+              onClick={e => {
+                const slug = author.username || author.name;
+                if (slug) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.location.href = `/blog/${encodeURIComponent(slug)}`;
+                }
               }}
             >
-              {category.name}
-            </Typography>
-          )}
-          <Box sx={{ fontSize: '0.75rem', color: '#868e96' }}>
-            {new Date(createdAt).toLocaleDateString('ko-KR')} · {_count.comments}개의 댓글
-          </Box>
-        </CardContent>
-        {/* Bottom author bar */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            px: 2.5,
-            py: 1.25,
-            borderTop: '1px solid #f1f3f5',
-          }}
-        >
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}
-            onClick={e => {
-              const slug = author.username || author.name;
-              if (slug) {
-                e.preventDefault();
-                e.stopPropagation();
-                window.location.href = `/blog/${encodeURIComponent(slug)}`;
-              }
-            }}
-          >
-            <Avatar src={author.image || ''} sx={{ width: 22, height: 22 }} />
-            <Typography
-              sx={{
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: '#212529',
-                '&:hover': { color: '#e65100' },
-              }}
-            >
-              by <strong>{author.name || '익명'}</strong>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
-              <FavoriteBorder sx={{ fontSize: 13, color: '#adb5bd' }} />
-              <Typography sx={{ fontSize: '0.75rem', color: '#adb5bd' }}>{_count.likes}</Typography>
+              <Avatar src={author.image || ''} sx={{ width: 24, height: 24 }} />
+              <Typography sx={{ fontSize: '0.8125rem', fontWeight: 600, color: '#1e293b' }}>
+                {author.name || '익명'}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#94a3b8', fontSize: '0.75rem' }}>
+              <span>{new Date(createdAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</span>
+              <span>·</span>
+              <span>{readTime}분 읽기</span>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
+                <FavoriteBorder sx={{ fontSize: 14 }} />
+                {_count.likes}
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
+                <ChatBubbleOutline sx={{ fontSize: 14 }} />
+                {_count.comments}
+              </Box>
             </Box>
           </Box>
-        </Box>
+        </CardContent>
       </Card>
     </Link>
   );

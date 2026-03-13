@@ -90,7 +90,7 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
                 fontSize: '0.9375rem',
                 color: '#212529',
                 cursor: 'pointer',
-                '&:hover': { color: '#ffa000' },
+                '&:hover': { color: '#d97706' },
               }}
             >
               {post.author.name || '익명'}
@@ -134,7 +134,7 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
                 borderRadius: '12px',
                 fontSize: '0.875rem',
                 fontWeight: 600,
-                color: '#ffa000',
+                color: '#d97706',
               }}
             >
               {tag.trim()}
@@ -192,7 +192,7 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
                 fontSize: '1.125rem',
                 color: '#212529',
                 cursor: 'pointer',
-                '&:hover': { color: '#ffa000' },
+                '&:hover': { color: '#d97706' },
               }}
             >
               {post.author.name || '익명'}
@@ -215,19 +215,19 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
             px: 3,
             py: 1.5,
             borderRadius: '20px',
-            border: liked ? '1px solid #ffa000' : '1px solid #dee2e6',
+            border: liked ? '1px solid #f59e0b' : '1px solid #dee2e6',
             backgroundColor: liked ? 'rgba(255,160,0,0.06)' : '#fff',
             cursor: 'pointer',
             transition: 'all 0.15s',
-            '&:hover': { borderColor: '#ffa000', backgroundColor: 'rgba(255,160,0,0.04)' },
+            '&:hover': { borderColor: '#f59e0b', backgroundColor: 'rgba(255,160,0,0.04)' },
           }}
         >
           {liked ? (
-            <Favorite sx={{ fontSize: 22, color: '#ffa000' }} />
+            <Favorite sx={{ fontSize: 22, color: '#d97706' }} />
           ) : (
             <FavoriteBorder sx={{ fontSize: 22, color: '#adb5bd' }} />
           )}
-          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: liked ? '#ffa000' : '#868e96' }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: liked ? '#f59e0b' : '#868e96' }}>
             {likeCount}
           </Typography>
         </Box>
@@ -284,7 +284,7 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
               <Box
                 component="span"
                 onClick={() => router.push('/login')}
-                sx={{ color: '#ffa000', cursor: 'pointer', fontWeight: 700 }}
+                sx={{ color: '#d97706', cursor: 'pointer', fontWeight: 700 }}
               >
                 로그인
               </Box>

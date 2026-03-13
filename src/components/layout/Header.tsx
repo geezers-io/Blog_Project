@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
-import { Search as SearchIcon, KeyboardArrowDown } from '@mui/icons-material';
+import { Search as SearchIcon, KeyboardArrowDown, CreateOutlined } from '@mui/icons-material';
 import {
   AppBar,
   Toolbar,
@@ -39,42 +39,33 @@ const Header = () => {
       elevation={0}
       sx={{
         backgroundColor: '#fff',
-        borderBottom: '1px solid #f1f3f5',
+        borderBottom: '1px solid #f1f5f9',
       }}
     >
-      <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ height: 64, justifyContent: 'space-between' }}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters sx={{ height: 60, justifyContent: 'space-between' }}>
           {/* Logo */}
           <Link href="/">
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
               <Box
                 sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #ffa000, #ff8f00)',
+                  width: 28,
+                  height: 28,
+                  borderRadius: '6px',
+                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Typography sx={{ color: '#fff', fontWeight: 800, fontSize: 18 }}>B</Typography>
+                <Typography sx={{ color: '#fff', fontWeight: 800, fontSize: 15 }}>B</Typography>
               </Box>
-              <Typography
-                sx={{
-                  fontWeight: 800,
-                  fontSize: '1.25rem',
-                  color: '#212529',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                velog
-              </Typography>
+              <Typography sx={{ fontWeight: 700, fontSize: '1.125rem', color: '#1e293b' }}>Blog</Typography>
             </Box>
           </Link>
 
           {/* Right section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             {/* Search */}
             {searchOpen ? (
               <Box
@@ -83,31 +74,30 @@ const Header = () => {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: '#f1f3f5',
-                  borderRadius: '20px',
-                  px: 2,
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '10px',
+                  px: 1.5,
                   py: 0.5,
-                  width: 280,
-                  transition: 'all 0.2s',
+                  width: 260,
                   '&:focus-within': {
-                    backgroundColor: '#fff',
-                    boxShadow: '0 0 0 2px rgba(255,160,0,0.3)',
+                    borderColor: '#f59e0b',
+                    boxShadow: '0 0 0 3px rgba(245,158,11,0.1)',
                   },
                 }}
               >
+                <SearchIcon sx={{ color: '#94a3b8', fontSize: 20, mr: 0.5 }} />
                 <InputBase
                   autoFocus
                   placeholder="검색어를 입력하세요"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onBlur={() => !searchQuery && setSearchOpen(false)}
-                  sx={{ flex: 1, fontSize: 14 }}
+                  sx={{ flex: 1, fontSize: '0.875rem' }}
                 />
-                <SearchIcon sx={{ color: '#868e96', fontSize: 20 }} />
               </Box>
             ) : (
-              <IconButton onClick={() => setSearchOpen(true)} sx={{ color: '#868e96' }}>
-                <SearchIcon />
+              <IconButton onClick={() => setSearchOpen(true)} sx={{ color: '#64748b' }}>
+                <SearchIcon sx={{ fontSize: 22 }} />
               </IconButton>
             )}
 
@@ -116,15 +106,11 @@ const Header = () => {
                 <Button
                   variant="contained"
                   size="small"
+                  startIcon={<CreateOutlined sx={{ fontSize: 18 }} />}
                   onClick={() => router.push('/write')}
-                  sx={{
-                    borderRadius: '20px',
-                    px: 2.5,
-                    fontWeight: 700,
-                    fontSize: 14,
-                  }}
+                  sx={{ ml: 1, px: 2.5, py: 0.75, fontSize: '0.8125rem' }}
                 >
-                  새 글 작성
+                  글쓰기
                 </Button>
                 <Box
                   onClick={e => setAnchorEl(e.currentTarget)}
@@ -132,15 +118,14 @@ const Header = () => {
                     display: 'flex',
                     alignItems: 'center',
                     cursor: 'pointer',
-                    ml: 0.5,
-                    borderRadius: '20px',
-                    '&:hover': { backgroundColor: '#f8f9fa' },
-                    py: 0.5,
-                    px: 0.5,
+                    ml: 1,
+                    p: 0.5,
+                    borderRadius: '10px',
+                    '&:hover': { backgroundColor: '#f8fafc' },
                   }}
                 >
-                  <Avatar src={session.user?.image || ''} sx={{ width: 28, height: 28 }} />
-                  <KeyboardArrowDown sx={{ fontSize: 18, color: '#868e96' }} />
+                  <Avatar src={session.user?.image || ''} sx={{ width: 32, height: 32, border: '2px solid #f1f5f9' }} />
+                  <KeyboardArrowDown sx={{ fontSize: 18, color: '#94a3b8', ml: 0.25 }} />
                 </Box>
                 <Menu
                   anchorEl={anchorEl}
@@ -151,27 +136,27 @@ const Header = () => {
                   PaperProps={{
                     sx: {
                       mt: 1,
-                      minWidth: 200,
-                      borderRadius: 2,
-                      boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-                      border: '1px solid #f1f3f5',
+                      minWidth: 220,
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                      border: '1px solid #f1f5f9',
                     },
                   }}
                 >
-                  <Box sx={{ px: 2.5, py: 1.5 }}>
-                    <Typography sx={{ fontWeight: 700, fontSize: 14, color: '#212529' }}>
+                  <Box sx={{ px: 2, py: 1.5 }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1e293b' }}>
                       {session.user?.name}
                     </Typography>
-                    <Typography sx={{ fontSize: 12, color: '#868e96', mt: 0.25 }}>{session.user?.email}</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: '#94a3b8' }}>{session.user?.email}</Typography>
                   </Box>
-                  <Divider />
+                  <Divider sx={{ borderColor: '#f1f5f9' }} />
                   <MenuItem
                     onClick={() => {
                       setAnchorEl(null);
                       const name = session.user?.name;
                       if (name) router.push(`/blog/${encodeURIComponent(name)}`);
                     }}
-                    sx={{ py: 1.5, fontSize: 14 }}
+                    sx={{ py: 1.25, fontSize: '0.875rem' }}
                   >
                     내 블로그
                   </MenuItem>
@@ -180,17 +165,17 @@ const Header = () => {
                       setAnchorEl(null);
                       router.push('/settings');
                     }}
-                    sx={{ py: 1.5, fontSize: 14 }}
+                    sx={{ py: 1.25, fontSize: '0.875rem' }}
                   >
                     설정
                   </MenuItem>
-                  <Divider />
+                  <Divider sx={{ borderColor: '#f1f5f9' }} />
                   <MenuItem
                     onClick={() => {
                       setAnchorEl(null);
                       signOut();
                     }}
-                    sx={{ py: 1.5, fontSize: 14, color: '#868e96' }}
+                    sx={{ py: 1.25, fontSize: '0.875rem', color: '#ef4444' }}
                   >
                     로그아웃
                   </MenuItem>
@@ -198,16 +183,10 @@ const Header = () => {
               </>
             ) : (
               <Button
-                variant="outlined"
+                variant="contained"
                 size="small"
                 onClick={() => router.push('/login')}
-                sx={{
-                  borderRadius: '20px',
-                  borderColor: '#212529',
-                  color: '#212529',
-                  fontWeight: 700,
-                  '&:hover': { borderColor: '#212529', backgroundColor: '#f8f9fa' },
-                }}
+                sx={{ ml: 1, px: 2.5, py: 0.75 }}
               >
                 로그인
               </Button>

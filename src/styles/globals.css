@@ -14,8 +14,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
-  background-color: #f8f9fa;
-  color: #212529;
+  background-color: #fff;
+  color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,7 +31,7 @@ img {
 }
 
 ::selection {
-  background-color: rgba(255, 160, 0, 0.2);
+  background-color: rgba(245, 158, 11, 0.2);
 }
 
 ::-webkit-scrollbar {
@@ -41,9 +41,9 @@ img {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ced4da;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #adb5bd;
+  background: #94a3b8;
 }

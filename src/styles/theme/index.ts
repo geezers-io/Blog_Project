@@ -8,18 +8,18 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ['Pretendard', '-apple-system', '"Apple SD Gothic Neo"', '"Segoe UI"', 'sans-serif'].join(','),
-    h1: { fontWeight: 800, fontSize: '2.5rem', lineHeight: 1.2, letterSpacing: '-0.02em' },
-    h2: { fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.3, letterSpacing: '-0.01em' },
-    h3: { fontWeight: 700, fontSize: '1.375rem', lineHeight: 1.4 },
+    h1: { fontWeight: 800, fontSize: '2.25rem', lineHeight: 1.2, letterSpacing: '-0.025em' },
+    h2: { fontWeight: 700, fontSize: '1.5rem', lineHeight: 1.3, letterSpacing: '-0.015em' },
+    h3: { fontWeight: 700, fontSize: '1.25rem', lineHeight: 1.4 },
     h4: { fontWeight: 600, fontSize: '1.125rem', lineHeight: 1.4 },
     h5: { fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 },
     h6: { fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.5 },
-    body1: { fontSize: '1rem', lineHeight: 1.8, color: color.text.primary },
+    body1: { fontSize: '1rem', lineHeight: 1.75, color: color.text.primary },
     body2: { fontSize: '0.875rem', lineHeight: 1.6, color: color.text.secondary },
     caption: { fontSize: '0.75rem', color: color.text.secondary },
   },
   shape: {
-    borderRadius: 4,
+    borderRadius: 8,
   },
   components: {
     MuiButton: {
@@ -27,7 +27,7 @@ const theme = createTheme({
         root: {
           textTransform: 'none',
           fontWeight: 600,
-          borderRadius: 8,
+          borderRadius: 9999,
           padding: '8px 20px',
           fontSize: '0.875rem',
         },
@@ -41,11 +41,11 @@ const theme = createTheme({
           },
         },
         outlined: {
-          borderColor: '#dee2e6',
+          borderColor: '#e2e8f0',
           color: color.text.primary,
           '&:hover': {
             borderColor: color.primary.main,
-            backgroundColor: 'rgba(255, 160, 0, 0.04)',
+            backgroundColor: 'rgba(245, 158, 11, 0.04)',
           },
         },
       },
@@ -54,12 +54,12 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           boxShadow: 'none',
-          border: 'none',
-          borderRadius: 4,
-          transition: 'transform 0.12s ease, box-shadow 0.12s ease',
+          border: '1px solid #f1f5f9',
+          borderRadius: 12,
+          transition: 'border-color 0.2s, box-shadow 0.2s',
           '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.08)',
+            borderColor: '#e2e8f0',
+            boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
           },
         },
       },
@@ -68,7 +68,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 500,
-          borderRadius: 12,
+          borderRadius: 9999,
           fontSize: '0.8125rem',
         },
       },
@@ -77,7 +77,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            borderRadius: 8,
+            borderRadius: 10,
           },
         },
       },
@@ -85,7 +85,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#f8f9fa',
+          backgroundColor: '#ffffff',
           margin: 0,
           padding: 0,
         },

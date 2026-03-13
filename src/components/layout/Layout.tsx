@@ -11,8 +11,8 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
-      <Box component="main" sx={{ flex: 1, py: 4 }}>
-        <Container maxWidth="lg">{children}</Container>
+      <Box component="main" sx={{ flex: 1, py: 3 }}>
+        <Container maxWidth="xl">{children}</Container>
       </Box>
       <Footer />
     </Box>
