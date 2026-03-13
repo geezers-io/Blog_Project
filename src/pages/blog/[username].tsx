@@ -6,60 +6,20 @@ import { FavoriteBorder, ChatBubbleOutline } from '@mui/icons-material';
 import { Typography, Box, Avatar, Chip, Card, CardContent, CardMedia, Divider } from '@mui/material';
 import MiniPlayer from '@/components/blog/MiniPlayer';
 import VisitorCounter from '@/components/blog/VisitorCounter';
-import prisma from '@/lib/prisma';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { username } = context.params as { username: string };
+  const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
-  const user = await prisma.user.findFirst({
-    where: { OR: [{ username }, { name: username }] },
-    select: {
-      id: true,
-      name: true,
-      username: true,
-      email: true,
-      image: true,
-      bio: true,
-      blogTitle: true,
-      themeColor: true,
-      bgmUrl: true,
-      todayVisits: true,
-      totalVisits: true,
-    },
-  });
+  const res = await fetch(`${API_URL}/blog/${encodeURIComponent(username)}`);
+  if (!res.ok) return { notFound: true };
 
-  if (!user) {
-    return { notFound: true };
-  }
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { todayVisits: { increment: 1 }, totalVisits: { increment: 1 } },
-  });
-
-  const posts = await prisma.post.findMany({
-    where: { authorId: user.id, published: true },
-    include: {
-      category: true,
-      _count: { select: { comments: true, likes: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  const tagSet = new Set<string>();
-  posts.forEach(p => {
-    if (p.tags) p.tags.split(',').forEach(t => tagSet.add(t.trim()));
-  });
-
+  const data = await res.json();
   return {
     props: {
-      blogUser: {
-        ...JSON.parse(JSON.stringify(user)),
-        todayVisits: user.todayVisits + 1,
-        totalVisits: user.totalVisits + 1,
-      },
-      posts: JSON.parse(JSON.stringify(posts)),
-      tags: Array.from(tagSet),
+      blogUser: data.user,
+      posts: data.posts,
+      tags: data.tags,
     },
   };
 };
@@ -83,7 +43,7 @@ const BlogPage = ({ blogUser, posts, tags }: InferGetServerSidePropsType<typeof 
 
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-      {/* Blog Header - 싸이월드 감성 */}
+      {/* Blog Header */}
       <Box
         sx={{
           background: `linear-gradient(135deg, ${color}15, ${color}08)`,

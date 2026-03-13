@@ -1,0 +1,6 @@
+2026-03-13 13:48:54.894131+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIES" not found (this database is empty); SQL statement:
+MERGE INTO categories (id, name) KEY (name) VALUES (RANDOM_UUID(), '기술') [42104-224]
+2026-03-13 13:50:00.328601+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIES" not found (this database is empty); SQL statement:
+MERGE INTO categories (id, name) KEY (name) VALUES (RANDOM_UUID(), '기술') [42104-224]

@@ -4,31 +4,17 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Favorite, FavoriteBorder, ChatBubbleOutline } from '@mui/icons-material';
 import { Typography, Box, Button, TextField, CardMedia, Avatar, Chip, Divider, Paper } from '@mui/material';
-import prisma from '@/lib/prisma';
+import { api } from '@/lib/api';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { id } = context.params as { id: string };
+  const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
-  const post = await prisma.post.findUnique({
-    where: { id },
-    include: {
-      author: { select: { id: true, name: true, image: true, email: true } },
-      category: true,
-      comments: {
-        include: { author: { select: { id: true, name: true, image: true } } },
-        orderBy: { createdAt: 'desc' },
-      },
-      _count: { select: { likes: true } },
-    },
-  });
+  const res = await fetch(`${API_URL}/posts/${id}`);
+  if (!res.ok) return { notFound: true };
 
-  if (!post) {
-    return { notFound: true };
-  }
-
-  return {
-    props: { post: JSON.parse(JSON.stringify(post)) },
-  };
+  const post = await res.json();
+  return { props: { post } };
 };
 
 const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -43,30 +29,32 @@ const PostDetailPage = ({ post }: InferGetServerSidePropsType<typeof getServerSi
 
   const handleDelete = async () => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
-    const res = await fetch(`/api/posts/${post.id}`, { method: 'DELETE' });
-    if (res.ok) router.push('/');
+    try {
+      await api.deletePost(post.id);
+      router.push('/');
+    } catch (e) {
+      console.error('Delete failed:', e);
+    }
   };
 
   const handleComment = async () => {
     if (!commentText.trim()) return;
-    const res = await fetch(`/api/posts/${post.id}/comments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: commentText }),
-    });
-    if (res.ok) {
-      const comment = await res.json();
+    try {
+      const comment = await api.createComment(post.id, { content: commentText });
       setComments([comment, ...comments]);
       setCommentText('');
+    } catch (e) {
+      console.error('Comment failed:', e);
     }
   };
 
   const handleLike = async () => {
-    const res = await fetch(`/api/posts/${post.id}/likes`, { method: 'POST' });
-    if (res.ok) {
-      const data = await res.json();
+    try {
+      const data = await api.toggleLike(post.id);
       setLiked(data.liked);
-      setLikeCount(prev => (data.liked ? prev + 1 : prev - 1));
+      setLikeCount((prev: number) => (data.liked ? prev + 1 : prev - 1));
+    } catch (e) {
+      console.error('Like failed:', e);
     }
   };
 

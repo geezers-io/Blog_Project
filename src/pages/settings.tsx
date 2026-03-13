@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CloudUpload as UploadIcon, MusicNote } from '@mui/icons-material';
 import { Typography, TextField, Button, Box, Avatar, Paper, Alert } from '@mui/material';
 import ThemePicker from '@/components/blog/ThemePicker';
+import { api } from '@/lib/api';
 
 const SettingsPage = () => {
   const router = useRouter();
@@ -24,8 +25,8 @@ const SettingsPage = () => {
       router.replace('/login');
       return;
     }
-    fetch('/api/blog/settings')
-      .then(res => res.json())
+    api
+      .getBlogSettings()
       .then(data => {
         setSettings({
           username: data.username || '',
@@ -43,20 +44,11 @@ const SettingsPage = () => {
     setSaving(true);
     setMessage('');
     try {
-      const res = await fetch('/api/blog/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
-      });
-      if (res.ok) {
-        setMessage('저장되었습니다!');
-        setTimeout(() => setMessage(''), 3000);
-      } else {
-        const error = await res.json();
-        setMessage(error.message || '저장에 실패했습니다.');
-      }
-    } catch {
-      setMessage('오류가 발생했습니다.');
+      await api.updateBlogSettings(settings);
+      setMessage('저장되었습니다!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (e: any) {
+      setMessage(e.message || '오류가 발생했습니다.');
     } finally {
       setSaving(false);
     }
@@ -65,12 +57,11 @@ const SettingsPage = () => {
   const handleBgmUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const formData = new FormData();
-    formData.append('file', file);
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    if (res.ok) {
-      const { url } = await res.json();
+    try {
+      const { url } = await api.uploadFile(file);
       setSettings(prev => ({ ...prev, bgmUrl: url }));
+    } catch (err) {
+      console.error('BGM upload failed:', err);
     }
   };
 

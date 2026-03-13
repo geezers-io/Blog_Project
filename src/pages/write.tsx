@@ -17,6 +17,7 @@ import {
   IconButton,
   Chip,
 } from '@mui/material';
+import { api } from '@/lib/api';
 
 interface Category {
   id: string;
@@ -43,17 +44,14 @@ const WritePage = () => {
   }, [status, router]);
 
   useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(setCategories)
-      .catch(console.error);
+    api.getCategories().then(setCategories).catch(console.error);
   }, []);
 
   useEffect(() => {
     const editId = router.query.edit as string;
     if (editId) {
-      fetch(`/api/posts/${editId}`)
-        .then(res => res.json())
+      api
+        .getPost(editId)
         .then(post => {
           setTitle(post.title);
           setContent(post.content);
@@ -80,40 +78,23 @@ const WritePage = () => {
     try {
       let imageUrl: string | undefined;
       if (selectedFile) {
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
-        if (uploadRes.ok) {
-          const { url } = await uploadRes.json();
-          imageUrl = url;
-        }
+        const { url } = await api.uploadFile(selectedFile);
+        imageUrl = url;
       }
 
       const editId = router.query.edit as string;
-      const method = editId ? 'PUT' : 'POST';
-      const url = editId ? `/api/posts/${editId}` : '/api/posts';
+      const postData = {
+        title,
+        content,
+        image: imageUrl,
+        categoryId: categoryId || undefined,
+        tags: tags.length > 0 ? tags.join(',') : undefined,
+      };
 
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          content,
-          image: imageUrl,
-          categoryId: categoryId || undefined,
-          tags: tags.length > 0 ? tags.join(',') : undefined,
-        }),
-      });
-
-      if (res.ok) {
-        const post = await res.json();
-        router.push(`/posts/${post.id}`);
-      } else {
-        const error = await res.json();
-        alert(error.message || '저장에 실패했습니다.');
-      }
-    } catch {
-      alert('오류가 발생했습니다.');
+      const post = editId ? await api.updatePost(editId, postData) : await api.createPost(postData);
+      router.push(`/posts/${post.id}`);
+    } catch (e: any) {
+      alert(e.message || '오류가 발생했습니다.');
     } finally {
       setUploading(false);
     }

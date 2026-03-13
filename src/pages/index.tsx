@@ -5,7 +5,6 @@ import { SortRounded } from '@mui/icons-material';
 import { Typography, Button, Chip, Box, Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import PostCard from '@/components/post/PostCard';
 import InfiniteScroll from '@/components/shared/InfiniteScroll';
-import prisma from '@/lib/prisma';
 
 interface Post {
   id: string;
@@ -26,50 +25,30 @@ interface Category {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { category, sort, search, page = '1' } = context.query;
-  const pageNum = parseInt(page as string, 10);
-  const limit = 12;
+  const params = new URLSearchParams();
+  if (category && typeof category === 'string') params.set('category', category);
+  if (sort && typeof sort === 'string') params.set('sort', sort);
+  if (search && typeof search === 'string') params.set('search', search);
+  params.set('page', page as string);
+  params.set('limit', '12');
 
-  const where: any = { published: true };
-  if (category && typeof category === 'string') {
-    where.category = { name: category };
-  }
-  if (search && typeof search === 'string') {
-    where.OR = [{ title: { contains: search } }, { content: { contains: search } }];
-  }
+  const API_URL = process.env.API_URL || 'http://localhost:8080/api';
 
-  const orderBy: any = {};
-  if (sort === 'oldest') {
-    orderBy.createdAt = 'asc';
-  } else {
-    orderBy.createdAt = 'desc';
-  }
-
-  const [posts, total, categories] = await Promise.all([
-    prisma.post.findMany({
-      where,
-      orderBy,
-      skip: (pageNum - 1) * limit,
-      take: limit,
-      include: {
-        author: { select: { id: true, name: true, username: true, image: true } },
-        category: true,
-        _count: { select: { comments: true, likes: true } },
-      },
-    }),
-    prisma.post.count({ where }),
-    prisma.category.findMany({
-      include: { _count: { select: { posts: true } } },
-      orderBy: { name: 'asc' },
-    }),
+  const [postsRes, catsRes] = await Promise.all([
+    fetch(`${API_URL}/posts?${params.toString()}`),
+    fetch(`${API_URL}/categories`),
   ]);
+
+  const postsData = await postsRes.json();
+  const categories = await catsRes.json();
 
   return {
     props: {
-      posts: JSON.parse(JSON.stringify(posts)),
-      total,
-      currentPage: pageNum,
-      totalPages: Math.ceil(total / limit),
-      categories: JSON.parse(JSON.stringify(categories)),
+      posts: postsData.posts || [],
+      total: postsData.total || 0,
+      currentPage: parseInt(page as string, 10),
+      totalPages: postsData.totalPages || 1,
+      categories,
       filters: {
         category: (category as string) || null,
         sort: (sort as string) || 'recent',
@@ -100,7 +79,8 @@ const HomePage = ({
     if (filters.sort) params.set('sort', filters.sort);
     if (filters.search) params.set('search', filters.search);
 
-    const res = await fetch(`/api/posts?${params.toString()}`);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+    const res = await fetch(`${apiUrl}/posts?${params.toString()}`);
     const data = await res.json();
 
     setPosts(prev => [...prev, ...data.posts]);

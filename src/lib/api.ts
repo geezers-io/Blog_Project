@@ -1,12 +1,37 @@
-const API_BASE = '/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+
+let authToken: string | null = null;
+
+export const setAuthToken = (token: string | null) => {
+  authToken = token;
+  if (token) {
+    if (typeof window !== 'undefined') localStorage.setItem('blog_token', token);
+  } else {
+    if (typeof window !== 'undefined') localStorage.removeItem('blog_token');
+  }
+};
+
+export const getAuthToken = (): string | null => {
+  if (authToken) return authToken;
+  if (typeof window !== 'undefined') {
+    authToken = localStorage.getItem('blog_token');
+  }
+  return authToken;
+};
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
+  const token = getAuthToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options?.headers as Record<string, string>),
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_BASE}${url}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
     ...options,
+    headers,
   });
 
   if (!res.ok) {
@@ -18,6 +43,10 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  // Auth
+  syncAuth: (data: { email: string; name: string; image: string }) =>
+    request<{ token: string; user: any }>('/auth/sync', { method: 'POST', body: JSON.stringify(data) }),
+
   // Posts
   getPosts: (params?: Record<string, string>) => {
     const query = params ? '?' + new URLSearchParams(params).toString() : '';
@@ -46,4 +75,23 @@ export const api = {
 
   // Search
   search: (query: string) => request<any>(`/search?q=${encodeURIComponent(query)}`),
+
+  // Blog
+  getBlog: (username: string) => request<any>(`/blog/${encodeURIComponent(username)}`),
+  getBlogSettings: () => request<any>('/blog/settings'),
+  updateBlogSettings: (data: any) => request<any>('/blog/settings', { method: 'PUT', body: JSON.stringify(data) }),
+
+  // File upload
+  uploadFile: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const token = getAuthToken();
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Upload failed');
+    return res.json();
+  },
 };
