@@ -12,7 +12,7 @@ module.exports = {
   ],
   plugins: ['react-hooks', 'promise', '@emotion', 'unused-imports', 'import'],
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
@@ -21,11 +21,9 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     '@typescript-eslint/ban-ts-comment': 2,
-    '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/consistent-type-assertions': 2,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-member-accessibility': 2,
-    '@typescript-eslint/interface-name-prefix': 0,
     '@typescript-eslint/no-empty-function': 1,
     '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-explicit-any': 1,
@@ -86,7 +84,7 @@ module.exports = {
   settings: {
     react: {
       pragma: 'React',
-      version: '18.2',
+      version: 'detect',
     },
   },
 };

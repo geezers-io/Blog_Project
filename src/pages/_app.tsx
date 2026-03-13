@@ -1,10 +1,11 @@
+import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@mui/material';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import PageLayout from '@/components/layout/PageLayout';
 import theme from '@/styles/theme';
-import ErrorBoundary from 'components/ErrorBoundary';
 
-export default function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+export default function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>

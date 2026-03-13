@@ -1,114 +1,100 @@
-import { useState } from 'react';
-import { MailOutline, Phone, Language } from '@mui/icons-material';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { MailOutline } from '@mui/icons-material';
 import { TextField, Button, Grid, Typography, Avatar, Box } from '@mui/material';
 
 const AboutPage = () => {
-  const [name] = useState('Heedyomy');
-  const [occupation] = useState('학생');
-  const [introduction, setIntroduction] = useState(
-    '내 소개를 할게 나는 히정이야 내 별명은 히됴미고 나는 ... 음... 노래 듣는 걸 좋아해 ... 😀',
-  );
-  const [email, setEmail] = useState('info@yourdomain.com');
-  const [phoneNumber, setPhoneNumber] = useState('+1 (378) 400-1234');
-  const [website, setWebsite] = useState('www.yourdomain.com');
-  const [profilePicture, setProfilePicture] = useState('/Profile.jpg');
+  const { data: session } = useSession();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [image, setImage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
 
-  const handleProfilePictureChange = event => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfilePicture(reader.result as string);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    if (session?.user) {
+      setName(session.user.name || '');
+      setEmail(session.user.email || '');
+      setImage(session.user.image || '');
+    }
+  }, [session]);
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch('/api/users/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editName }),
+      });
+      if (res.ok) {
+        const user = await res.json();
+        setName(user.name);
+        setIsEditing(false);
+      }
+    } catch {
+      alert('저장에 실패했습니다.');
     }
   };
 
-  const handleIntroductionChange = event => {
-    setIntroduction(event.target.value);
+  const handleEdit = () => {
+    setEditName(name);
+    setIsEditing(true);
   };
 
-  const handleEmailChange = event => {
-    setEmail(event.target.value);
-  };
-
-  const handlePhoneNumberChange = event => {
-    setPhoneNumber(event.target.value);
-  };
-
-  const handleWebsiteChange = event => {
-    setWebsite(event.target.value);
-  };
-
-  const handleEditButtonClick = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleSaveButtonClick = () => {
-    setIsEditing(false);
-  };
+  if (!session) {
+    return (
+      <Grid container justifyContent="center" height="100vh">
+        <Grid item>
+          <Typography sx={{ mt: 8 }}>로그인이 필요합니다.</Typography>
+        </Grid>
+      </Grid>
+    );
+  }
 
   return (
     <Grid container justifyContent="center" height="100vh">
       <Grid item>
         <Grid sx={{ display: 'flex', alignItems: 'center', mt: 8 }}>
           <Avatar
-            src={profilePicture}
+            src={image}
             alt="프로필 사진"
             sx={{
-              width: 300,
-              height: 300,
+              width: 200,
+              height: 200,
               mr: 4,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
             }}
           />
           <Box>
-            <Typography component="h1" variant="h5">
-              {name}
-            </Typography>
-            <Typography variant="subtitle1" gutterBottom>
-              {occupation}
-            </Typography>
             {isEditing ? (
               <>
                 <TextField
                   margin="normal"
                   fullWidth
-                  multiline
-                  rows={3}
-                  value={introduction}
-                  onChange={handleIntroductionChange}
+                  label="이름"
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
                 />
-                <TextField margin="normal" fullWidth value={email} onChange={handleEmailChange} />
-                <TextField margin="normal" fullWidth value={phoneNumber} onChange={handlePhoneNumberChange} />
-                <TextField margin="normal" fullWidth value={website} onChange={handleWebsiteChange} />
-                <input type="file" accept="image/*" onChange={handleProfilePictureChange} />
-                <Button variant="contained" onClick={handleSaveButtonClick} sx={{ mt: 2 }}>
+                <Button variant="contained" onClick={handleSave} sx={{ mt: 2, mr: 1 }}>
                   저장
+                </Button>
+                <Button variant="outlined" onClick={() => setIsEditing(false)} sx={{ mt: 2 }}>
+                  취소
                 </Button>
               </>
             ) : (
               <>
-                <Typography variant="body1">{introduction}</Typography>
+                <Typography component="h1" variant="h5">
+                  {name || '이름 없음'}
+                </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                   <MailOutline sx={{ mr: 1 }} />
                   <Typography variant="body2">{email}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                  <Phone sx={{ mr: 1 }} />
-                  <Typography variant="body2">{phoneNumber}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                  <Language sx={{ mr: 1 }} />
-                  <Typography variant="body2">{website}</Typography>
-                </Box>
+                <Button variant="contained" onClick={handleEdit} sx={{ mt: 2 }}>
+                  프로필 편집
+                </Button>
               </>
-            )}
-            {!isEditing && (
-              <Button variant="contained" onClick={handleEditButtonClick} sx={{ mt: 2 }}>
-                프로필 편집
-              </Button>
             )}
           </Box>
         </Grid>
