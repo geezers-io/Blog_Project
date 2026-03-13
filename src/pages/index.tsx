@@ -1,21 +1,9 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useCallback } from 'react';
-import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
-import {
-  Typography,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
-  Box,
-} from '@mui/material';
+import { SortRounded } from '@mui/icons-material';
+import { Typography, Button, Chip, Box, Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import PostCard from '@/components/post/PostCard';
 import InfiniteScroll from '@/components/shared/InfiniteScroll';
 import prisma from '@/lib/prisma';
 
@@ -39,7 +27,7 @@ interface Category {
 export const getServerSideProps: GetServerSideProps = async context => {
   const { category, sort, search, page = '1' } = context.query;
   const pageNum = parseInt(page as string, 10);
-  const limit = 10;
+  const limit = 12;
 
   const where: any = { published: true };
   if (category && typeof category === 'string') {
@@ -91,7 +79,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   };
 };
 
-const IndexPage = ({
+const HomePage = ({
   posts: initialPosts,
   total,
   currentPage,
@@ -103,11 +91,6 @@ const IndexPage = ({
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [page, setPage] = useState(currentPage);
   const [hasMore, setHasMore] = useState(currentPage < totalPages);
-  const [expanded, setExpanded] = useState<string | false>(false);
-
-  const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
-  };
 
   const loadMore = useCallback(async () => {
     const nextPage = page + 1;
@@ -130,8 +113,9 @@ const IndexPage = ({
     router.push(`/?${query.toString()}`);
   };
 
-  const sortPosts = (sortType: string) => {
-    navigate({ sort: sortType, ...(filters.category ? { category: filters.category } : {}) });
+  const handleSort = (_: React.MouseEvent<HTMLElement>, value: string | null) => {
+    if (!value) return;
+    navigate({ sort: value, ...(filters.category ? { category: filters.category } : {}) });
   };
 
   const filterByCategory = (categoryName: string | null) => {
@@ -143,87 +127,85 @@ const IndexPage = ({
   };
 
   return (
-    <main>
-      <div style={{ padding: '2rem 1rem' }}>
-        <Box sx={{ mb: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-          <Chip label="전체" color={!filters.category ? 'primary' : 'default'} onClick={() => filterByCategory(null)} />
+    <>
+      {filters.search && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h3">
+            &quot;{filters.search}&quot;{' '}
+            <Typography component="span" variant="h3" color="text.secondary">
+              검색 결과 {total}건
+            </Typography>
+          </Typography>
+        </Box>
+      )}
+
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap', gap: 1 }}
+      >
+        <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap' }}>
+          <Chip
+            label="전체"
+            variant={!filters.category ? 'filled' : 'outlined'}
+            color={!filters.category ? 'primary' : 'default'}
+            onClick={() => filterByCategory(null)}
+            sx={{ cursor: 'pointer' }}
+          />
           {categories.map((cat: Category) => (
             <Chip
               key={cat.id}
-              label={`${cat.name} (${cat._count.posts})`}
+              label={cat.name}
+              variant={filters.category === cat.name ? 'filled' : 'outlined'}
               color={filters.category === cat.name ? 'primary' : 'default'}
               onClick={() => filterByCategory(cat.name)}
+              sx={{ cursor: 'pointer' }}
             />
           ))}
         </Box>
 
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-            <Typography>정렬</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={{ flexDirection: 'column', alignItems: 'center' }}>
-            <Button
-              variant={filters.sort === 'recent' ? 'contained' : 'outlined'}
-              color="primary"
-              onClick={() => sortPosts('recent')}
-              style={{ marginBottom: '1rem', marginRight: '0.5rem' }}
-            >
-              최신순
-            </Button>
-            <Button
-              variant={filters.sort === 'oldest' ? 'contained' : 'outlined'}
-              color="primary"
-              onClick={() => sortPosts('oldest')}
-              style={{ marginBottom: '1rem' }}
-            >
-              오래된순
-            </Button>
-          </AccordionDetails>
-        </Accordion>
+        <ToggleButtonGroup value={filters.sort} exclusive onChange={handleSort} size="small">
+          <ToggleButton value="recent" sx={{ px: 2, fontSize: 13 }}>
+            <SortRounded sx={{ fontSize: 16, mr: 0.5 }} />
+            최신순
+          </ToggleButton>
+          <ToggleButton value="oldest" sx={{ px: 2, fontSize: 13 }}>
+            오래된순
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
 
-        {filters.search && (
-          <Typography sx={{ my: 2 }}>
-            &quot;{filters.search}&quot; 검색 결과: {total}건
-          </Typography>
-        )}
-
-        <InfiniteScroll
-          load={loadMore}
-          hasMore={hasMore}
-          endMessage={posts.length === 0 ? '게시물이 없습니다.' : '더 이상 게시물이 없습니다.'}
-        >
+      <InfiniteScroll
+        load={loadMore}
+        hasMore={hasMore}
+        endMessage={
+          posts.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <Typography variant="h4" color="text.secondary" sx={{ mb: 1 }}>
+                아직 게시물이 없습니다
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                첫 번째 글을 작성해보세요!
+              </Typography>
+              <Button variant="contained" onClick={() => router.push('/write')}>
+                글쓰기
+              </Button>
+            </Box>
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+              모든 게시물을 불러왔습니다
+            </Typography>
+          )
+        }
+      >
+        <Grid container spacing={2.5}>
           {posts.map((post: Post) => (
-            <Card key={post.id} style={{ marginBottom: '2rem' }}>
-              <Link href={`/posts/${post.id}`} style={{ textDecoration: 'none' }}>
-                <CardActionArea>
-                  {post.image && <CardMedia component="img" height="200" image={post.image} alt={post.title} />}
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                      {post.category && <Chip label={post.category.name} size="small" />}
-                      <Typography variant="caption" color="textSecondary">
-                        {new Date(post.createdAt).toLocaleDateString('ko-KR')}
-                      </Typography>
-                    </Box>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {post.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      {post.content.substring(0, 150)}...
-                    </Typography>
-                    <Box sx={{ mt: 1, display: 'flex', gap: 2 }}>
-                      <Typography variant="caption">{post.author.name || '익명'}</Typography>
-                      <Typography variant="caption">댓글 {post._count.comments}</Typography>
-                      <Typography variant="caption">좋아요 {post._count.likes}</Typography>
-                    </Box>
-                  </CardContent>
-                </CardActionArea>
-              </Link>
-            </Card>
+            <Grid item xs={12} sm={6} md={4} key={post.id}>
+              <PostCard {...post} />
+            </Grid>
           ))}
-        </InfiniteScroll>
-      </div>
-    </main>
+        </Grid>
+      </InfiniteScroll>
+    </>
   );
 };
 
-export default IndexPage;
+export default HomePage;

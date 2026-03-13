@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Box, CircularProgress } from '@mui/material';
-import styled from 'styled-components';
 
 interface InfiniteScrollProps {
   load: () => void;
@@ -9,7 +8,7 @@ interface InfiniteScrollProps {
   children?: React.ReactNode;
 }
 
-const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ children, load, hasMore, endMessage = 'No more data' }) => {
+const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ children, load, hasMore, endMessage }) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const observedRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,17 +49,19 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ children, load, hasMore
   return (
     <Box>
       {children}
-      <Observed ref={observedRef}>{hasMore ? <CircularProgress /> : endMessage}</Observed>
+      <Box
+        ref={observedRef}
+        sx={{
+          py: 4,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {hasMore ? <CircularProgress size={32} sx={{ color: 'primary.main' }} /> : endMessage}
+      </Box>
     </Box>
   );
 };
-
-const Observed = styled.div`
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-`;
 
 export default InfiniteScroll;

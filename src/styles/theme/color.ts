@@ -1,13 +1,25 @@
 export const color = {
   primary: {
-    light: '#ffc107',
+    light: '#ffca28',
     main: '#ffa000',
-    dark: '#ff6f00',
+    dark: '#ff8f00',
+    contrastText: '#1a1a1a',
   },
   secondary: {
-    main: '#ffb300',
+    light: '#4a4a4a',
+    main: '#2d2d2d',
+    dark: '#1a1a1a',
+    contrastText: '#ffffff',
   },
   error: {
-    main: '#DA1E28',
+    main: '#ef4444',
+  },
+  background: {
+    default: '#fafafa',
+    paper: '#ffffff',
+  },
+  text: {
+    primary: '#1a1a1a',
+    secondary: '#6b7280',
   },
 };
